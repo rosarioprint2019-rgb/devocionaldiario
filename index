@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Devocional Diario Inteligente</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-principal: #0b0f19;
+      --bg-tarjeta: #1e293b;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --texto-claro: #f8fafc;
+      --texto-mutado: #94a3b8;
+      --borde: #334155;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background-color: var(--bg-principal);
+      color: var(--texto-claro);
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+      padding: 40px 20px;
+      text-align: center;
+      border-bottom: 1px solid var(--borde);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(to right, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      margin: 10px 0 0 0;
+      color: var(--texto-mutado);
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 750px;
+      margin: 0 auto;
+      padding: 30px 20px 60px 20px;
+    }
+
+    .seccion-titulo {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #818cf8;
+      font-weight: 600;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-principal {
+      background-color: var(--bg-tarjeta);
+      border: 1px solid var(--borde);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 35px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .bloque-devocional {
+      border-left: 3px solid #3b82f6;
+      padding-left: 16px;
+      margin-bottom: 24px;
+    }
+
+    .bloque-devocional:last-child {
+      margin-bottom: 0;
+    }
+
+    .bloque-devocional h3 {
+      margin: 0 0 6px 0;
+      font-size: 15px;
+      color: #f1f5f9;
+      font-weight: 600;
+    }
+
+    .bloque-devocional p {
+      margin: 0;
+      color: #cbd5e1;
+      font-size: 15px;
+      white-space: pre-line;
+    }
+
+    .versiculo-destacado {
+      background: rgba(59, 130, 246, 0.1);
+      border-left: 4px solid #60a5fa;
+      padding: 16px;
+      border-radius: 0 12px 12px 0;
+      font-style: italic;
+    }
+
+    textarea {
+      width: 100%;
+      height: 90px;
+      background-color: #0f172a;
+      border: 1px solid var(--borde);
+      border-radius: 12px;
+      padding: 14px;
+      color: var(--texto-claro);
+      font-family: inherit;
+      font-size: 14px;
+      resize: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    button {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent) 0%, #1d4ed8 100%);
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+    }
+
+    button:disabled {
+      background: #334155;
+      color: var(--texto-mutado);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .loading-container {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--texto-mutado);
+    }
+
+    .spinner {
+      border: 3px solid rgba(255,255,255,0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border-left-color: var(--accent);
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px auto;
+    }
+
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Devocional Diario</h1>
+  <p id="fecha-hoy">Cargando fecha...</p>
+</header>
+
+<div class="container">
+
+  <div class="seccion-titulo">✨ Devocional Guiado de Hoy</div>
+  <div class="card-principal" id="contenedor-devocional">
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Buscando palabra del cielo para hoy...</p>
+    </div>
+  </div>
+
+  <div class="seccion-titulo">💬 Devocional Bíblico Personalizado</div>
+  <div class="card-principal">
+    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">¿Estás pasando por algo específico? Contame cómo te sentís para recibir dirección bíblica.</p>
+    <textarea id="consulta" placeholder="Ej: Me siento ansioso por el futuro / Necesito fortaleza para perdonar..."></textarea>
+    <button id="btnPalabra" onclick="palabraPersonalizada()">Generar Devocional</button>
+    
+    <div id="contenedor-respuesta" style="margin-top: 25px; display: none;"></div>
+  </div>
+
+</div>
+
+<script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbxanLXCEdQJCcnGzYIy3OEKEu37FyXHlpCrldvenrCln9JO36ZS_4rBe-6QagA423to/exec";
+
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById("fecha-hoy").innerText = new Date().toLocaleDateString("es-AR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    generarDevocionalAutomatico();
+  });
+
+  async function generarDevocionalAutomatico() {
+    const contenedor = document.getElementById("contenedor-devocional");
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        mode: "cors",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ tipo: "devocional" })
+      });
+      const data = await res.json();
+
+      if(data.error) {
+        contenedor.innerHTML = `<p style="color:#ef4444;">⚠️ Error: ${data.error}</p>`;
+        return;
+      }
+
+      contenedor.innerHTML = `
+        <div class="bloque-devocional versiculo-destacado">
+          <h3>📖 Escritura Clave</h3>
+          <p>${data.versiculo}</p>
+        </div>
+        <div class="bloque-devocional">
+          <h3>📝 Reflexión del Día</h3>
+          <p>${data.reflexion}</p>
+        </div>
+        <div class="bloque-devocional">
+          <h3>💡 Aplicación Práctica</h3>
+          <p>${data.aplicacion}</p>
+        </div>
+        <div class="bloque-devocional">
+          <h3>🙏 Oración Altar</h3>
+          <p>${data.oracion}</p>
+        </div>
+        <div class="bloque-devocional">
+          <h3>❓ Para Meditar</h3>
+          <p>${data.pregunta}</p>
+        </div>
+        <div class="bloque-devocional">
+          <h3>🎯 Desafío Diario</h3>
+          <p>${data.desafio}</p>
+        </div>
+        <div class="bloque-devocional">
+          <h3>📚 Lectura Complementaria</h3>
+          <p>${data.lectura}</p>
+        </div>
+      `;
+    } catch (error) {
+      contenedor.innerHTML = `<p style="color:#ef4444;">❌ No se pudo cargar el devocional automático. Comprobá la conexión o URL.</p>`;
+    }
+  }
+
+  async function palabraPersonalizada() {
+    const texto = document.getElementById("consulta").value.trim();
+    const btn = document.getElementById("btnPalabra");
+    const contenedor = document.getElementById("contenedor-respuesta");
+
+    if (!texto) {
+      alert("Por favor, escribe lo que sientes o necesitas.");
+      return;
+    }
+
+    btn.disabled = true;
+    contenedor.style.display = "block";
+    contenedor.innerHTML = `
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Preparando una respuesta basada en la Palabra...</p>
+      </div>`;
+
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        mode: "cors",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ tipo: "palabra", mensaje: texto })
+      });
+      const data = await res.json();
+
+      if(data.error) {
+        contenedor.innerHTML = `<p style="color:#ef4444;">⚠️ Error: ${data.error}</p>`;
+        return;
+      }
+
+      contenedor.innerHTML = `
+        <div style="border-top: 1px solid var(--borde); padding-top: 20px;">
+          <div class="bloque-devocional versiculo-destacado">
+            <h3>📖 Promesa Bíblica</h3>
+            <p>${data.versiculo}</p>
+          </div>
+          <div class="bloque-devocional">
+            <h3>Pastoral y Aliento</h3>
+            <p>${data.reflexion}</p>
+          </div>
+          <div class="bloque-devocional">
+            <h3>🎯 Consejo Práctico</h3>
+            <p>${data.consejo}</p>
+          </div>
+          <div class="bloque-devocional">
+            <h3>🙏 Oración contigo</h3>
+            <p>${data.oracion}</p>
+          </div>
+        </div>
+      `;
+    } catch (error) {
+      contenedor.innerHTML = `<p style="color:#ef4444;">❌ Ocurrió un error al procesar el consejo.</p>`;
+    } finally {
+      btn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>
