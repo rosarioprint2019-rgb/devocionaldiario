@@ -294,7 +294,7 @@
     .plan-dia .check-icono { font-size: 12px; color: var(--whatsapp); display: none; margin-top: 4px; font-weight: bold;}
     .plan-dia.completado .check-icono { display: block; }
 
-    /* Módulos de listas (Oraciones e Historial de Notas) */
+    /* Listas y Contenedores Nuevos (Oraciones e Historial) */
     .oracion-lista, .historial-notas-lista {
       margin-top: 15px;
       display: flex;
@@ -480,18 +480,18 @@
     </div>
   </div>
 
-  <!-- BLOC DE NOTAS PERSONAL Y ARCHIVO -->
+  <!-- BLOC DE NOTAS CON HISTORIAL LOCAL -->
   <div class="seccion-titulo">🖍️ Mis Notas de Hoy</div>
   <div class="card-principal">
-    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Escribe lo que el Señor trajo a tu corazón. Se guarda automáticamente mientras escribes.</p>
-    <textarea id="bloc-notas" placeholder="Escribe aquí tus reflexiones y revelaciones de hoy..." oninput="guardarNotasEnTiempoReal()"></textarea>
+    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Escribe lo que sientas. Se guardará en borrador, y puedes archivarlo permanentemente abajo.</p>
+    <textarea id="bloc-notas" placeholder="Escribe aquí tus reflexiones y revelaciones de hoy..." oninput="guardarBorradorNota()"></textarea>
     
     <div style="display: flex; gap: 10px; margin-top: 10px;">
-      <button style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-top: 0; flex: 1;" onclick="archivarNotaHoy()">💾 Guardar en mi Historial</button>
+      <button style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-top: 0; flex: 1;" onclick="archivarNotaHistorial()">💾 Guardar en mi Historial</button>
       <button style="background: #475569; margin-top: 0; flex: 1;" onclick="copyNotas()">📋 Copiar al portapapeles</button>
     </div>
 
-    <!-- Subsección: Historial de Notas -->
+    <!-- NUEVO CONTENEDOR VISUAL: HISTORIAL -->
     <h4 style="margin: 25px 0 10px 0; font-size: 14px; color: #818cf8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">📂 Historial de Notas Guardadas</h4>
     <div class="historial-notas-lista" id="lista-historial-notas"></div>
   </div>
@@ -538,14 +538,13 @@
     
     cargarTema();
     gestionarRacha();
-    cargarNotaTemporal();
+    cargarBorradorNota();
     renderizarPeticiones();
     renderizarHistorialNotas();
     
     generarDevocionalAutomatico();
   });
 
-  // --- SISTEMA DE TEMAS (CLARO/OSCURO) ---
   function alternarTema() {
     const actual = document.body.getAttribute("data-theme");
     const nuevo = actual === "light" ? "dark" : "light";
@@ -558,7 +557,6 @@
     document.body.setAttribute("data-theme", guardado);
   }
 
-  // --- SISTEMA DE RACHAS ---
   function gestionarRacha() {
     const hoyStr = new Date().toLocaleDateString("es-AR");
     const ayer = new Date();
@@ -582,94 +580,94 @@
     document.getElementById("badge-racha").innerText = `🔥 ${racha} ${racha === 1 ? 'Día' : 'Días'}`;
   }
 
-  // --- BLOC DE NOTAS (GUARDADO TEMPORAL + HISTORIAL PERMANENTE) ---
-  function cargarNotaTemporal() {
-    const notaGuardada = localStorage.getItem("nota_temporal_devocional");
-    if (notaGuardada) {
-      document.getElementById("bloc-notas").value = notaGuardada;
+  // --- NUEVA LÓGICA DE NOTAS (BORRADOR + HISTORIAL SEPARADOS) ---
+  function cargarBorradorNota() {
+    const borrador = localStorage.getItem("devocional_nota_borrador");
+    if (borrador) {
+      document.getElementById("bloc-notas").value = borrador;
     }
   }
 
-  function guardarNotasEnTiempoReal() {
+  function guardarBorradorNota() {
     const texto = document.getElementById("bloc-notas").value;
-    localStorage.setItem("nota_temporal_devocional", texto);
+    localStorage.setItem("devocional_nota_borrador", texto);
   }
 
   function copyNotas() {
     const texto = document.getElementById("bloc-notas").value;
     if(!texto) { alert("¡Escribe algo primero!"); return; }
     navigator.clipboard.writeText(texto);
-    alert("¡Notas copiadas al portapapeles!");
+    alert("¡Borrador copiado al portapapeles!");
   }
 
-  // HISTORIAL DE NOTAS PERMANENTES
-  function obtenerHistorialNotas() {
-    return JSON.parse(localStorage.getItem("historial_notas_devocional") || "[]");
+  function obtenerNotasHistorialCompleto() {
+    return JSON.parse(localStorage.getItem("devocional_historial_notas") || "[]");
   }
 
-  function archivarNotaHoy() {
+  function archivarNotaHistorial() {
     const texto = document.getElementById("bloc-notas").value.trim();
-    if (!texto) { alert("El bloc de notas está vacío."); return; }
+    if (!texto) { alert("Por favor, escribe una reflexión antes de guardarla."); return; }
 
-    const fechaStr = new Date().toLocaleDateString("es-AR", { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-    const pasajeClave = devocionalActual ? devocionalActual.versiculo.split("\n")[0] : "Devocional Libre";
+    const ahora = new Date();
+    const fechaFormateada = ahora.toLocaleDateString("es-AR", { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    const escrituraHoy = devocionalActual ? devocionalActual.versiculo.split("\n")[0] : "Estudio Personal";
 
-    let historial = obtenerHistorialNotas();
-    historial.unshift({
+    let notas = obtenerNotasHistorialCompleto();
+    notas.unshift({
       id: Date.now(),
-      fecha: fechaStr,
-      pasaje: pasajeClave,
-      texto: texto
+      fecha: fechaFormateada,
+      pasaje: escrituraHoy,
+      contenido: texto
     });
 
-    localStorage.setItem("historial_notas_devocional", JSON.stringify(historial));
+    localStorage.setItem("devocional_historial_notas", JSON.stringify(notas));
     
-    // Limpiamos el bloc actual tras guardarlo abajo
+    // Limpiamos el panel actual
     document.getElementById("bloc-notas").value = "";
-    localStorage.removeItem("nota_temporal_devocional");
+    localStorage.removeItem("devocional_nota_borrador");
 
     renderizarHistorialNotas();
-    alert("¡Nota guardada con éxito en tu historial de abajo!");
+    alert("¡Nota guardada permanentemente en tu historial inferior!");
   }
 
-  function eliminarNotaHistorial(id) {
-    if(!confirm("¿Seguro que quieres eliminar esta nota guardada?")) return;
-    let historial = obtenerHistorialNotas();
-    historial = historial.filter(n => n.id !== id);
-    localStorage.setItem("historial_notas_devocional", JSON.stringify(historial));
+  function eliminarNotaDelHistorial(id) {
+    if (!confirm("¿De verdad querés eliminar esta nota de tu historial?")) return;
+    let notas = obtenerNotasHistorialCompleto();
+    notas = notas.filter(n => n.id !== id);
+    localStorage.setItem("devocional_historial_notas", JSON.stringify(notas));
     renderizarHistorialNotas();
   }
 
-  function copiarNotaHistorial(texto) {
+  function copiarNotaDelHistorial(texto) {
     navigator.clipboard.writeText(texto);
-    alert("Contenido de la nota copiado.");
+    alert("Texto de la nota vieja copiado con éxito.");
   }
 
   function renderizarHistorialNotas() {
-    const contenedor = document.getElementById("lista-historial-notes") || document.getElementById("lista-historial-notas");
-    const historial = obtenerHistorialNotas();
+    const contenedor = document.getElementById("lista-historial-notas");
+    const notas = obtenerNotasHistorialCompleto();
     contenedor.innerHTML = "";
 
-    if (historial.length === 0) {
-      contenedor.innerHTML = `<p style="color: var(--texto-mutado); font-size:13px; margin:0;">No tienes notas guardadas en tu historial.</p>`;
+    if (notas.length === 0) {
+      contenedor.innerHTML = `<p style="color: var(--texto-mutado); font-size:13px; margin:0;">Aún no guardaste ninguna nota en el historial permanente.</p>`;
       return;
     }
 
-    historial.forEach(n => {
+    notas.forEach(n => {
       const div = document.createElement("div");
       div.className = "nota-archivada-item";
       div.innerHTML = `
         <div class="nota-archivada-header">
           <div>
             <div class="nota-meta">📅 ${n.fecha}</div>
-            <div class="nota-meta" style="color: var(--texto-mutated); font-style: italic;">📖 ${n.pasaje}</div>
+            <div class="nota-meta" style="font-style: italic; opacity:0.8;">📖 ${n.pasaje}</div>
           </div>
           <div class="nota-archivada-acciones">
-            <button class="btn-pildora btn-pildora-copy" onclick="copiarNotaHistorial(\`${n.texto.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">📋</button>
-            <button class="btn-pildora btn-pildora-del" onclick="eliminarNotaHistorial(${n.id})">✕</button>
+            <button class="btn-pildora btn-pildora-copy" onclick="copiarNotaDelHistorial(\`${n.contenido.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">📋 Copiar</button>
+            <button class="btn-pildora btn-pildora-del" onclick="eliminarNotaDelHistorial(${n.id})">✕</button>
           </div>
         </div>
-        <div class="nota-archivada-texto">${n.texto}</div>
+        <div class="nota-archivada-texto">${n.contenido}</div>
       `;
       contenedor.appendChild(div);
     });
@@ -737,11 +735,9 @@
     });
   }
 
-  // --- PLAYLIST INTELIGENTE ---
   function establecerMusicaDinámica(textoClave) {
     let index = Math.abs(textoClave.length % cancionesAdoracion.length);
     cancionSeleccionada = cancionesAdoracion[index];
-    
     document.getElementById("musica-titulo").innerText = `🎵 Sugerencia: ${cancionSeleccionada.titulo}`;
     document.getElementById("musica-sub").innerText = `Por: ${cancionSeleccionada.artista}`;
   }
@@ -751,22 +747,17 @@
     window.open(url, '_blank');
   }
 
-  // --- BUSCADOR DE BIBLIA ---
   function buscarEnBiblia() {
     const pasaje = document.getElementById("input-pasaje-biblia").value.trim();
     if (!pasaje) { alert("Por favor, ingresa un pasaje bíblico."); return; }
-    
     const container = document.getElementById("frame-biblia-container");
     const iframe = document.getElementById("iframe-biblia");
-    
     iframe.src = "about:blank";
     const urlBiblia = `https://www.biblegateway.com/passage/?search=${encodeURIComponent(pasaje)}&version=RVR1960&interface=print`;
-    
     container.style.display = "block";
     setTimeout(() => { iframe.src = urlBiblia; }, 50);
   }
 
-  // --- ENLACE CON BACKEND AUTOMÁTICO ---
   async function generarDevocionalAutomatico() {
     const contenedor = document.getElementById("contenedor-devocional");
     try {
@@ -777,11 +768,7 @@
         body: JSON.stringify({ tipo: "devocional" })
       });
       const data = await res.json();
-
-      if(data.error) {
-        contenedor.innerHTML = `<p style="color:#ef4444;">⚠️ Error: ${data.error}</p>`;
-        return;
-      }
+      if(data.error) { contenedor.innerHTML = `<p style="color:#ef4444;">⚠️ Error: ${data.error}</p>`; return; }
 
       devocionalActual = data;
       establecerMusicaDinámica(data.versiculo || "adoracion");
@@ -809,13 +796,12 @@
         </div>
         <div class="bloque-devocional" style="border-left-color: #f43f5e;">
           <h3>🎯 Desafío de Amor y Gratitud</h3>
-          <p>${data.desafio || 'Camina hoy recordando que eres aceptado en el Amado.'}</p>
+          <p>${data.desafio || 'Camina hoy recordando que eres aceptado.'}</p>
         </div>
         <div class="bloque-devocional" style="border-left-color: #10b981;">
           <h3>📚 Lectura Recomendada para hoy</h3>
           <p>${data.lectura || 'Consulta el plan semanal abajo.'}</p>
         </div>
-        
         <div class="compartir-container">
           <button class="btn-share btn-wp" onclick="compartir('wa')">📲 WhatsApp</button>
           <button class="btn-share btn-fb" onclick="compartir('fb')">🔵 Facebook</button>
@@ -823,35 +809,28 @@
         </div>
       `;
 
-      if(data.plan_semanal) {
-        configurarPlanDinamico(data.plan_semanal, data.fecha);
-      }
-
+      if(data.plan_semanal) configurarPlanDinamico(data.plan_semanal, data.fecha);
     } catch (error) {
-      contenedor.innerHTML = `<p style="color:#ef4444;">❌ No se pudo cargar el devocional automático. Comprobá la conexión o URL.</p>`;
+      contenedor.innerHTML = `<p style="color:#ef4444;">❌ No se pudo cargar el devocional automático.</p>`;
     }
   }
 
   function compartir(plataforma) {
     if (!devocionalActual) return;
     const urlPagina = window.location.href;
-    const textoCompartir = `🙏 *Devocional Diario* 📖\n\n"${devocionalActual.versiculo}"\n\nLee la reflexión completa aquí: ${urlPagina}`;
-    
+    const textoCompartir = `🙏 *Devocional Diario* 📖\n\n"${devocionalActual.versiculo}"\n\nURL: ${urlPagina}`;
     let urlShare = "";
     if (plataforma === 'wa') urlShare = `https://api.whatsapp.com/send?text=${encodeURIComponent(textoCompartir)}`;
     if (plataforma === 'fb') urlShare = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlPagina)}`;
-    if (plataforma === 'tw') urlShare = `https://twitter.com/intent/tweet?text=${encodeURIComponent("Te comparto el devocional bíblico de hoy.")}&url=${encodeURIComponent(urlPagina)}`;
-    
+    if (plataforma === 'tw') urlShare = `https://twitter.com/intent/tweet?text=${encodeURIComponent("Devocional bíblico.")}&url=${encodeURIComponent(urlPagina)}`;
     window.open(urlShare, '_blank');
   }
 
   function configurarPlanDinamico(plan, fechaDevocional) {
     const grid = document.getElementById("grid-plan");
     grid.innerHTML = "";
-
     const partesFecha = fechaDevocional.split("/");
     const d = new Date(partesFecha[2], partesFecha[1] - 1, partesFecha[0]);
-    
     const diaSemana = d.getDay();
     const diferencia = d.getDate() - diaSemana + (diaSemana === 0 ? -6 : 1);
     const lunesSemana = new Date(d.setDate(diferencia));
@@ -860,9 +839,7 @@
     const ultimaSemanaRegistrada = localStorage.getItem("ultima_semana_leida");
     if (ultimaSemanaRegistrada !== lunesFormateadoStr) {
       localStorage.setItem("ultima_semana_leida", lunesFormateadoStr);
-      for (let i = 0; i < 7; i++) {
-        localStorage.removeItem(`dinamico_plan_${i}`);
-      }
+      for (let i = 0; i < 7; i++) localStorage.removeItem(`dinamico_plan_${i}`);
     }
 
     plan.forEach((item, index) => {
@@ -882,12 +859,7 @@
           localStorage.setItem(`dinamico_plan_${index}`, "completado");
         }
       };
-      
-      div.innerHTML = `
-        <h4>${item.dia} ${diaMesFormateado}</h4>
-        <p>${item.pasaje}</p>
-        <div class="check-icono">✓ Leído</div>
-      `;
+      div.innerHTML = `<h4>${item.dia} ${diaMesFormateado}</h4><p>${item.pasaje}</p><div class="check-icono">✓ Leído</div>`;
       grid.appendChild(div);
     });
   }
@@ -896,7 +868,6 @@
     const texto = document.getElementById("consulta").value.trim();
     const btn = document.getElementById("btnPalabra");
     const contenedor = document.getElementById("contenedor-respuesta");
-
     if (!texto) { alert("Por favor, escribe lo que sientes."); return; }
     btn.disabled = true;
     contenedor.style.display = "block";
@@ -914,22 +885,10 @@
 
       contenedor.innerHTML = `
         <div style="border-top: 1px solid var(--borde); padding-top: 20px;">
-          <div class="bloque-devocional versiculo-destacado">
-            <h3>📖 Promesa Bíblica</h3>
-            <p>${data.versiculo}</p>
-          </div>
-          <div class="bloque-devocional">
-            <h3>Pastoral y Aliento</h3>
-            <p>${data.reflexion}</p>
-          </div>
-          <div class="bloque-devocional">
-            <h3>🎯 Consejo Práctico</h3>
-            <p>${data.consejo}</p>
-          </div>
-          <div class="bloque-devocional">
-            <h3>🙏 Oración contigo</h3>
-            <p>${data.oracion}</p>
-          </div>
+          <div class="bloque-devocional versiculo-destacado"><h3>📖 Promesa Bíblica</h3><p>${data.versiculo}</p></div>
+          <div class="bloque-devocional"><h3>Pastoral y Aliento</h3><p>${data.reflexion}</p></div>
+          <div class="bloque-devocional"><h3>🎯 Consejo Práctico</h3><p>${data.consejo}</p></div>
+          <div class="bloque-devocional"><h3>🙏 Oración contigo</h3><p>${data.oracion}</p></div>
         </div>
       `;
     } catch (error) {
