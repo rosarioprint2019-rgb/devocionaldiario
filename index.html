@@ -15,6 +15,8 @@
       --texto-claro: #f8fafc;
       --texto-mutado: #94a3b8;
       --borde: #334155;
+      --whatsapp: #25d366;
+      --facebook: #1877f2;
     }
 
     body {
@@ -156,6 +158,69 @@
       box-shadow: none;
     }
 
+    .compartir-container {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-share {
+      flex: 1;
+      min-width: 120px;
+      padding: 10px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 8px;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      transition: opacity 0.2s;
+      box-shadow: none;
+      margin-top: 0;
+    }
+
+    .btn-share:hover { opacity: 0.9; }
+    .btn-wp { background-color: var(--whatsapp); }
+    .btn-fb { background-color: var(--facebook); }
+    .btn-tw { background-color: #000000; border: 1px solid #334155; }
+
+    .plan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .plan-dia {
+      background-color: #0f172a;
+      border: 1px solid var(--borde);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .plan-dia:hover {
+      border-color: var(--accent);
+      background-color: #1e293b;
+    }
+
+    .plan-dia.completado {
+      border-color: var(--whatsapp);
+      background: rgba(37, 211, 102, 0.05);
+    }
+
+    .plan-dia h4 { margin: 0 0 4px 0; font-size: 14px; color: #f1f5f9; }
+    .plan-dia p { margin: 0; font-size: 12px; color: var(--texto-mutado); }
+    .plan-dia .check-icono { font-size: 12px; color: var(--whatsapp); display: none; margin-top: 4px;}
+    .plan-dia.completado .check-icono { display: block; }
+
     .loading-container {
       text-align: center;
       padding: 40px 0;
@@ -201,10 +266,19 @@
     <div id="contenedor-respuesta" style="margin-top: 25px; display: none;"></div>
   </div>
 
+  <div class="seccion-titulo">📅 Plan de Estudio Bíblico (Semanal)</div>
+  <div class="card-principal">
+    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Marcá los capítulos leídos. Este plan cambia automáticamente cada semana.</p>
+    <div class="plan-grid" id="grid-plan">
+      <p style="color: var(--texto-mutado); font-size: 13px;">Cargando plan semanal...</p>
+    </div>
+  </div>
+
 </div>
 
 <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbxanLXCEdQJCcnGzYIy3OEKEu37FyXHlpCrldvenrCln9JO36ZS_4rBe-6QagA423to/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbw41-E6T-kEYMjMAJPmSAoiSYaxDsMePWqswU2y-A1kBhOsnCCDSD6IMMxWqfKlWFi_xQ/exec";
+  let devocionalActual = null;
 
   window.addEventListener('DOMContentLoaded', () => {
     document.getElementById("fecha-hoy").innerText = new Date().toLocaleDateString("es-AR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -227,6 +301,8 @@
         return;
       }
 
+      devocionalActual = data;
+
       contenedor.innerHTML = `
         <div class="bloque-devocional versiculo-destacado">
           <h3>📖 Escritura Clave</h3>
@@ -244,22 +320,84 @@
           <h3>🙏 Oración Altar</h3>
           <p>${data.oracion}</p>
         </div>
-        <div class="bloque-devocional">
-          <h3>❓ Para Meditar</h3>
-          <p>${data.pregunta}</p>
-        </div>
-        <div class="bloque-devocional">
-          <h3>🎯 Desafío Diario</h3>
-          <p>${data.desafio}</p>
-        </div>
-        <div class="bloque-devocional">
-          <h3>📚 Lectura Complementaria</h3>
-          <p>${data.lectura}</p>
+        
+        <div class="compartir-container">
+          <button class="btn-share btn-wp" onclick="compartir('wa')">📲 WhatsApp</button>
+          <button class="btn-share btn-fb" onclick="compartir('fb')">🔵 Facebook</button>
+          <button class="btn-share btn-tw" onclick="compartir('tw')">⚫ Compartir en X</button>
         </div>
       `;
+
+      // Cargar el plan dinámico enviado por la IA
+      if(data.plan_semanal) {
+        configurarPlanDinamico(data.plan_semanal, data.fecha);
+      }
+
     } catch (error) {
       contenedor.innerHTML = `<p style="color:#ef4444;">❌ No se pudo cargar el devocional automático. Comprobá la conexión o URL.</p>`;
     }
+  }
+
+  function compartir(plataforma) {
+    if (!devocionalActual) return;
+    const urlPagina = window.location.href;
+    const textoCompartir = `🙏 *Devocional Diario* 📖\n\n"${devocionalActual.versiculo}"\n\nLee la reflexión completa aquí: ${urlPagina}`;
+    
+    let urlShare = "";
+    if (plataforma === 'wa') urlShare = `https://api.whatsapp.com/send?text=${encodeURIComponent(textoCompartir)}`;
+    if (plataforma === 'fb') urlShare = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlPagina)}`;
+    if (plataforma === 'tw') urlShare = `https://twitter.com/intent/tweet?text=${encodeURIComponent("Te comparto el devocional bíblico de hoy.")}&url=${encodeURIComponent(urlPagina)}`;
+    
+    window.open(urlShare, '_blank');
+  }
+
+  // NUEVA LÓGICA: Plan dinámico y limpieza semanal automática
+  function configurarPlanDinamico(plan, fechaDevocional) {
+    const grid = document.getElementById("grid-plan");
+    grid.innerHTML = "";
+
+    // Detectar el identificador único de la lectura de esta semana basándonos en la fecha que mandó el servidor
+    const partesFecha = fechaDevocional.split("/");
+    const d = new Date(partesFecha[2], partesFecha[1] - 1, partesFecha[0]);
+    
+    // Obtener el lunes de la semana actual para crear una "ID de semana" única
+    const diaSemana = d.getDay();
+    const diferencia = d.getDate() - diaSemana + (diaSemana === 0 ? -6 : 1);
+    const lunesSemana = new Date(d.setDate(diferencia)).toLocaleDateString("es-AR");
+
+    // Si cambió la semana, borramos las lecturas guardadas anteriormente en el teléfono del usuario
+    const ultimaSemanaRegistrada = localStorage.getItem("ultima_semana_leida");
+    if (ultimaSemanaRegistrada !== lunesSemana) {
+      localStorage.setItem("ultima_semana_leida", lunesSemana);
+      // Limpiar registros viejos del almacenamiento local
+      for (let i = 0; i < 7; i++) {
+        localStorage.removeItem(`dinamico_plan_${i}`);
+      }
+    }
+
+    // Dibujar los cuadritos interactivos con el plan de la IA
+    plan.forEach((item, index) => {
+      const estado = localStorage.getItem(`dinamico_plan_${index}`) === "completado";
+      
+      const div = document.createElement("div");
+      div.className = `plan-dia ${estado ? 'completado' : ''}`;
+      div.onclick = () => {
+        if (div.classList.contains("completado")) {
+          div.classList.remove("completado");
+          localStorage.removeItem(`dinamico_plan_${index}`);
+        } else {
+          div.classList.add("completado");
+          localStorage.setItem(`dinamico_plan_${index}`, "completado");
+        }
+      };
+      
+      div.innerHTML = `
+        <h4>${item.dia}</h4>
+        <p>${item.pasaje}</p>
+        <div class="check-icono">✓ Leído</div>
+      `;
+      grid.appendChild(div);
+    });
   }
 
   async function palabraPersonalizada() {
@@ -267,18 +405,10 @@
     const btn = document.getElementById("btnPalabra");
     const contenedor = document.getElementById("contenedor-respuesta");
 
-    if (!texto) {
-      alert("Por favor, escribe lo que sientes o necesitas.");
-      return;
-    }
-
+    if (!texto) { alert("Por favor, escribe lo que sientes."); return; }
     btn.disabled = true;
     contenedor.style.display = "block";
-    contenedor.innerHTML = `
-      <div class="loading-container">
-        <div class="spinner"></div>
-        <p>Preparando una respuesta basada en la Palabra...</p>
-      </div>`;
+    contenedor.innerHTML = `<div class="loading-container"><div class="spinner"></div><p>Buscando en la Palabra...</p></div>`;
 
     try {
       const res = await fetch(API_URL, {
@@ -288,11 +418,7 @@
         body: JSON.stringify({ tipo: "palabra", mensaje: texto })
       });
       const data = await res.json();
-
-      if(data.error) {
-        contenedor.innerHTML = `<p style="color:#ef4444;">⚠️ Error: ${data.error}</p>`;
-        return;
-      }
+      if(data.error) { contenedor.innerHTML = `<p style="color:#ef4444;">⚠️ Error: ${data.error}</p>`; return; }
 
       contenedor.innerHTML = `
         <div style="border-top: 1px solid var(--borde); padding-top: 20px;">
@@ -315,10 +441,8 @@
         </div>
       `;
     } catch (error) {
-      contenedor.innerHTML = `<p style="color:#ef4444;">❌ Ocurrió un error al procesar el consejo.</p>`;
-    } finally {
-      btn.disabled = false;
-    }
+      contenedor.innerHTML = `<p style="color:#ef4444;">❌ Error al procesar.</p>`;
+    } finally { btn.disabled = false; }
   }
 </script>
 </body>
