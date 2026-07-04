@@ -235,7 +235,7 @@
     }
 
     .plan-dia h4 { margin: 0 0 4px 0; font-size: 14px; color: #f1f5f9; }
-    .plan-dia p { margin: 0; font-size: 12px; color: var(--texto-mutated); }
+    .plan-dia p { margin: 0; font-size: 12px; color: var(--texto-mutado); }
     .plan-dia .check-icono { font-size: 12px; color: var(--whatsapp); display: none; margin-top: 4px;}
     .plan-dia.completado .check-icono { display: block; }
 
@@ -316,7 +316,6 @@
     generarDevocionalAutomatico();
   });
 
-  // Función optimizada para abrir e incrustar la Biblia sin bloqueos
   function buscarEnBiblia() {
     const pasaje = document.getElementById("input-pasaje-biblia").value.trim();
     if (!pasaje) { alert("Por favor, ingresa un pasaje bíblico."); return; }
@@ -324,15 +323,11 @@
     const container = document.getElementById("frame-biblia-container");
     const iframe = document.getElementById("iframe-biblia");
     
-    // Limpiamos el iframe viejo para evitar heredar bloqueos del navegador
     iframe.src = "about:blank";
-    
-    // Generamos la URL de BibleGateway (Versión Reina Valera 1960 en formato limpio de impresión)
     const urlBiblia = `https://www.biblegateway.com/passage/?search=${encodeURIComponent(pasaje)}&version=RVR1960&interface=print`;
     
     container.style.display = "block";
     
-    // Agregamos un ligero retraso para asegurar el render dinámico correcto
     setTimeout(() => {
       iframe.src = urlBiblia;
     }, 50);
@@ -415,20 +410,25 @@
     window.open(urlShare, '_blank');
   }
 
+  // Función modificada para calcular y pintar el Día + Fecha real
   function configurarPlanDinamico(plan, fechaDevocional) {
     const grid = document.getElementById("grid-plan");
     grid.innerHTML = "";
 
+    // Parseamos la fecha del backend (DD/MM/AAAA)
     const partesFecha = fechaDevocional.split("/");
     const d = new Date(partesFecha[2], partesFecha[1] - 1, partesFecha[0]);
     
+    // Calculamos el lunes de esta semana específica
     const diaSemana = d.getDay();
     const diferencia = d.getDate() - diaSemana + (diaSemana === 0 ? -6 : 1);
-    const lunesSemana = new Date(d.setDate(diferencia)).toLocaleDateString("es-AR");
+    const lunesSemana = new Date(d.setDate(diferencia));
+    const lunesFormateadoStr = lunesSemana.toLocaleDateString("es-AR");
 
+    // Reiniciar completados si cambió la semana calendario
     const ultimaSemanaRegistrada = localStorage.getItem("ultima_semana_leida");
-    if (ultimaSemanaRegistrada !== lunesSemana) {
-      localStorage.setItem("ultima_semana_leida", lunesSemana);
+    if (ultimaSemanaRegistrada !== lunesFormateadoStr) {
+      localStorage.setItem("ultima_semana_leida", lunesFormateadoStr);
       for (let i = 0; i < 7; i++) {
         localStorage.removeItem(`dinamico_plan_${i}`);
       }
@@ -437,6 +437,13 @@
     plan.forEach((item, index) => {
       const estado = localStorage.getItem(`dinamico_plan_${index}`) === "completado";
       
+      // Calculamos la fecha correspondiente para este casillero basándonos en el lunes
+      const fechaDia = new Date(lunesSemana);
+      fechaDia.setDate(lunesSemana.getDate() + index);
+      
+      // Formateamos para que devuelva "DD/MM" (ej: "06/07")
+      const diaMesFormateado = `${String(fechaDia.getDate()).padStart(2, '0')}/${String(fechaDia.getMonth() + 1).padStart(2, '0')}`;
+
       const div = document.createElement("div");
       div.className = `plan-dia ${estado ? 'completado' : ''}`;
       div.onclick = () => {
@@ -449,8 +456,9 @@
         }
       };
       
+      // Mostramos el nombre del día junto con la fecha real calculada
       div.innerHTML = `
-        <h4>${item.dia}</h4>
+        <h4>${item.dia} ${diaMesFormateado}</h4>
         <p>${item.pasaje}</p>
         <div class="check-icono">✓ Leído</div>
       `;
