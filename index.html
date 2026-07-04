@@ -20,7 +20,7 @@
       --nota-bg: #0f172a;
     }
 
-    /* Variables para el Modo Claro */
+    /* Estilos exclusivos para el nuevo Modo Claro */
     [data-theme="light"] {
       --bg-principal: #f1f5f9;
       --bg-tarjeta: #ffffff;
@@ -79,7 +79,7 @@
       color: #e0f2fe;
     }
 
-    /* Controles superiores flotantes */
+    /* Controles superiores del encabezado */
     .header-controls {
       display: flex;
       justify-content: center;
@@ -351,7 +351,7 @@
     .btn-pildora-check { background: #eab308; color: #000; }
     .btn-pildora-del { background: #ef4444; color: white; }
 
-    /* Módulo de Playlist */
+    /* Estilos del Módulo de Playlist */
     .playlist-box {
       background: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
       border: 1px dashed #818cf8;
@@ -420,7 +420,7 @@
     </div>
   </div>
 
-  <!-- NUEVO: REPRODUCTOR / PLAYLIST RECOMENDADA -->
+  <!-- PLAYLIST RECOMENDADA -->
   <div class="seccion-titulo">🎵 Adoración para Acompañar</div>
   <div class="card-principal">
     <div class="playlist-box">
@@ -451,15 +451,15 @@
     </div>
   </div>
 
-  <!-- NUEVO: BLOC DE NOTAS PERSONAL -->
+  <!-- BLOC DE NOTAS PERSONAL -->
   <div class="seccion-titulo">🖍️ Mis Notas de Hoy</div>
   <div class="card-principal">
     <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Escribe lo que el Señor trajo a tu corazón a través de esta lectura.</p>
     <textarea id="bloc-notas" placeholder="Escribe aquí tus reflexiones y revelaciones de hoy..." oninput="guardarNotas()"></textarea>
-    <button style="background: #475569; font-size: 13px; padding: 8px;" onclick="copiarNotas()">📋 Copiar mis notas</button>
+    <button style="background: #475569; font-size: 13px; padding: 8px;" onclick="copyNotas()">📋 Copiar mis notas</button>
   </div>
 
-  <!-- NUEVO: CUADERNO DE ORACIÓN -->
+  <!-- CUADERNO DE ORACIÓN -->
   <div class="seccion-titulo">🧎‍♂️ Mi Cuaderno de Oración</div>
   <div class="card-principal">
     <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Guarda tus intenciones. Al ver la respuesta de Dios, márcalas como testimonio.</p>
@@ -537,7 +537,7 @@
       } else if (!ultimoAcceso) {
         racha = 1;
       } else {
-        racha = 1; // Se rompió la racha
+        racha = 1; 
       }
       localStorage.setItem("racha_devocional", racha);
       localStorage.setItem("ultimo_acceso_devocional", hoyStr);
@@ -560,14 +560,14 @@
     localStorage.setItem(`nota_devocional_${hoyStr}`, texto);
   }
 
-  function copiarNotas() {
+  function copyNotas() {
     const texto = document.getElementById("bloc-notas").value;
     if(!texto) { alert("¡Escribe algo primero!"); return; }
     navigator.clipboard.writeText(texto);
     alert("¡Notas copiadas al portapapeles con éxito!");
   }
 
-  // --- CUADERNO DE ORACIÓN (PRIVADO) ---
+  // --- CUADERNO DE ORACIÓN ---
   function obtenerPeticiones() {
     return JSON.parse(localStorage.getItem("lista_peticiones_oracion") || "[]");
   }
@@ -631,7 +631,6 @@
 
   // --- PLAYLIST INTELIGENTE ---
   function establecerMusicaDinámica(textoClave) {
-    // Escoge una canción de forma aleatoria basada en el índice del día o texto clave
     let index = Math.abs(textoClave.length % cancionesAdoracion.length);
     cancionSeleccionada = cancionesAdoracion[index];
     
@@ -659,7 +658,7 @@
     setTimeout(() => { iframe.src = urlBiblia; }, 50);
   }
 
-  // --- CONTROL DE BACKEND / DEVOCIONAL AUTOMÁTICO ---
+  // --- ENLACE CON BACKEND AUTOMÁTICO ---
   async function generarDevocionalAutomatico() {
     const contenedor = document.getElementById("contenedor-devocional");
     try {
