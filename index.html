@@ -17,6 +17,17 @@
       --borde: #334155;
       --whatsapp: #25d366;
       --facebook: #1877f2;
+      --nota-bg: #0f172a;
+    }
+
+    /* Variables para el Modo Claro */
+    [data-theme="light"] {
+      --bg-principal: #f1f5f9;
+      --bg-tarjeta: #ffffff;
+      --texto-claro: #0f172a;
+      --texto-mutado: #64748b;
+      --borde: #e2e8f0;
+      --nota-bg: #f8fafc;
     }
 
     body {
@@ -25,14 +36,21 @@
       background-color: var(--bg-principal);
       color: var(--texto-claro);
       line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     header {
       background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
-      padding: 40px 20px;
+      padding: 30px 20px;
       text-align: center;
-      border-bottom: 1px solid var(--borde);
+      border-bottom: 1px solid #334155;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    [data-theme="light"] header {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      border-bottom: none;
     }
 
     header h1 {
@@ -45,10 +63,43 @@
       -webkit-text-fill-color: transparent;
     }
 
+    [data-theme="light"] header h1 {
+      background: none;
+      -webkit-text-fill-color: #ffffff;
+      color: #ffffff;
+    }
+
     header p {
       margin: 10px 0 0 0;
       color: var(--texto-mutado);
       font-size: 14px;
+    }
+
+    [data-theme="light"] header p {
+      color: #e0f2fe;
+    }
+
+    /* Controles superiores flotantes */
+    .header-controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .badge-control {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      user-select: none;
     }
 
     .container {
@@ -69,13 +120,18 @@
       gap: 8px;
     }
 
+    [data-theme="light"] .seccion-titulo {
+      color: #4f46e5;
+    }
+
     .card-principal {
       background-color: var(--bg-tarjeta);
       border: 1px solid var(--borde);
       border-radius: 16px;
       padding: 24px;
       margin-bottom: 35px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+      transition: background-color 0.3s, border-color 0.3s;
     }
 
     .bloque-devocional {
@@ -91,13 +147,14 @@
     .bloque-devocional h3 {
       margin: 0 0 6px 0;
       font-size: 15px;
-      color: #f1f5f9;
+      color: var(--texto-claro);
       font-weight: 600;
     }
 
     .bloque-devocional p {
       margin: 0;
-      color: #cbd5e1;
+      color: var(--texto-claro);
+      opacity: 0.85;
       font-size: 15px;
       white-space: pre-line;
     }
@@ -110,9 +167,9 @@
       font-style: italic;
     }
 
-    textarea, .input-biblia {
+    textarea, .input-biblia, .input-oracion {
       width: 100%;
-      background-color: #0f172a;
+      background-color: var(--nota-bg);
       border: 1px solid var(--borde);
       border-radius: 12px;
       padding: 14px;
@@ -120,7 +177,7 @@
       font-family: inherit;
       font-size: 14px;
       box-sizing: border-box;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, background-color 0.3s;
     }
 
     textarea {
@@ -128,22 +185,22 @@
       resize: none;
     }
 
-    textarea:focus, .input-biblia:focus {
+    textarea:focus, .input-biblia:focus, .input-oracion:focus {
       outline: none;
       border-color: var(--accent);
     }
 
-    .buscador-biblia-container {
+    .buscador-biblia-container, .oracion-form-container {
       display: flex;
       gap: 10px;
       margin-top: 10px;
     }
 
-    .buscador-biblia-container input {
+    .buscador-biblia-container input, .oracion-form-container input {
       flex: 2;
     }
 
-    .buscador-biblia-container button {
+    .buscador-biblia-container button, .oracion-form-container button {
       flex: 1;
       margin-top: 0;
     }
@@ -215,29 +272,111 @@
     }
 
     .plan-dia {
-      background-color: #0f172a;
+      background-color: var(--nota-bg);
       border: 1px solid var(--borde);
       border-radius: 10px;
       padding: 12px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.2s, background-color 0.3s;
     }
 
     .plan-dia:hover {
       border-color: var(--accent);
-      background-color: #1e293b;
+      background-color: var(--bg-tarjeta);
     }
 
     .plan-dia.completado {
       border-color: var(--whatsapp);
-      background: rgba(37, 211, 102, 0.05);
+      background: rgba(37, 211, 102, 0.08);
     }
 
-    .plan-dia h4 { margin: 0 0 4px 0; font-size: 14px; color: #f1f5f9; }
+    .plan-dia h4 { margin: 0 0 4px 0; font-size: 14px; color: var(--texto-claro); }
     .plan-dia p { margin: 0; font-size: 12px; color: var(--texto-mutado); }
-    .plan-dia .check-icono { font-size: 12px; color: var(--whatsapp); display: none; margin-top: 4px;}
+    .plan-dia .check-icono { font-size: 12px; color: var(--whatsapp); display: none; margin-top: 4px; font-weight: bold;}
     .plan-dia.completado .check-icono { display: block; }
+
+    /* Módulo Lista de Oración */
+    .oracion-lista {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .oracion-item {
+      background: var(--nota-bg);
+      border: 1px solid var(--borde);
+      padding: 12px 15px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .oracion-item.respondida {
+      border-color: #eab308;
+      background: rgba(234, 179, 8, 0.05);
+    }
+
+    .oracion-item-texto {
+      font-size: 14px;
+      color: var(--texto-claro);
+    }
+
+    .oracion-item.respondida .oracion-item-texto {
+      text-decoration: line-through;
+      color: var(--texto-mutado);
+    }
+
+    .oracion-acciones {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-pildora {
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      margin: 0;
+      width: auto;
+      box-shadow: none;
+    }
+
+    .btn-pildora:hover { transform: none; }
+    .btn-pildora-check { background: #eab308; color: #000; }
+    .btn-pildora-del { background: #ef4444; color: white; }
+
+    /* Módulo de Playlist */
+    .playlist-box {
+      background: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+      border: 1px dashed #818cf8;
+      padding: 16px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .playlist-info h4 { margin: 0 0 4px 0; font-size: 15px; color: var(--texto-claro); }
+    .playlist-info p { margin: 0; font-size: 13px; color: var(--texto-mutado); }
+    
+    .btn-playlist {
+      background: #1ed760;
+      color: black;
+      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      width: auto;
+      margin: 0;
+      box-shadow: none;
+    }
+    .btn-playlist:hover { background: #1db954; }
 
     .loading-container {
       text-align: center;
@@ -263,10 +402,16 @@
 <header>
   <h1>Devocional Diario</h1>
   <p id="fecha-hoy">Cargando fecha...</p>
+  
+  <div class="header-controls">
+    <div class="badge-control" id="badge-racha">🔥 1 Día</div>
+    <div class="badge-control" id="btn-theme" onclick="alternarTema()">🌓 Tema</div>
+  </div>
 </header>
 
 <div class="container">
 
+  <!-- DEVOCIONAL AUTOMÁTICO -->
   <div class="seccion-titulo">✨ Devocional Guided de Hoy</div>
   <div class="card-principal" id="contenedor-devocional">
     <div class="loading-container">
@@ -275,6 +420,19 @@
     </div>
   </div>
 
+  <!-- NUEVO: REPRODUCTOR / PLAYLIST RECOMENDADA -->
+  <div class="seccion-titulo">🎵 Adoración para Acompañar</div>
+  <div class="card-principal">
+    <div class="playlist-box">
+      <div class="playlist-info">
+        <h4 id="musica-titulo">Cargando sugerencia...</h4>
+        <p id="musica-sub">Una atmósfera de paz para tu devocional</p>
+      </div>
+      <button class="btn-playlist" id="btn-abrir-musica" onclick="abrirMusica()">▶ Escuchar</button>
+    </div>
+  </div>
+
+  <!-- DEVOCIONAL PERSONALIZADO -->
   <div class="seccion-titulo">💬 Devocional Bíblico Personalizado</div>
   <div class="card-principal">
     <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">¿Estás pasando por algo específico? Contame cómo te sentís para recibir dirección bíblica.</p>
@@ -284,6 +442,7 @@
     <div id="contenedor-respuesta" style="margin-top: 25px; display: none;"></div>
   </div>
 
+  <!-- PLAN SEMANAL -->
   <div class="seccion-titulo">📅 Plan de Estudio Bíblico (Semanal)</div>
   <div class="card-principal">
     <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Marcá los capítulos leídos. Este plan cambia automáticamente cada semana.</p>
@@ -292,7 +451,26 @@
     </div>
   </div>
 
-  <!-- SECCIÓN DE CONSULTA BÍBLICA DIGITAL -->
+  <!-- NUEVO: BLOC DE NOTAS PERSONAL -->
+  <div class="seccion-titulo">🖍️ Mis Notas de Hoy</div>
+  <div class="card-principal">
+    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Escribe lo que el Señor trajo a tu corazón a través de esta lectura.</p>
+    <textarea id="bloc-notas" placeholder="Escribe aquí tus reflexiones y revelaciones de hoy..." oninput="guardarNotas()"></textarea>
+    <button style="background: #475569; font-size: 13px; padding: 8px;" onclick="copiarNotas()">📋 Copiar mis notas</button>
+  </div>
+
+  <!-- NUEVO: CUADERNO DE ORACIÓN -->
+  <div class="seccion-titulo">🧎‍♂️ Mi Cuaderno de Oración</div>
+  <div class="card-principal">
+    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Guarda tus intenciones. Al ver la respuesta de Dios, márcalas como testimonio.</p>
+    <div class="oracion-form-container">
+      <input type="text" id="input-oracion" class="input-oracion" placeholder="Ej: Por la salud de mi familia / Por sabiduría...">
+      <button onclick="agregarPeticion()">Añadir Petición</button>
+    </div>
+    <div class="oracion-lista" id="lista-peticiones"></div>
+  </div>
+
+  <!-- BIBLIA ONLINE -->
   <div class="seccion-titulo">📜 Consulta la Biblia Online</div>
   <div class="card-principal">
     <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Escribe el pasaje o libro que deseas leer (Ejemplo: Romanos 8, Juan 3:16).</p>
@@ -310,12 +488,163 @@
 <script>
   const API_URL = "https://script.google.com/macros/s/AKfycbxzTVyVtiSVKrT7zMOEuZEqLDQVUU-2BZnu7pYAvocEjYrDl2cC8V0Mnk_MM4L4eYR6NQ/exec";
   let devocionalActual = null;
+  let cancionesAdoracion = [
+    { titulo: "La Bondad de Dios", artista: "Bethel Music", query: "La bondad de Dios En Vivo" },
+    { titulo: "Digno de Alabar", artista: "Elevation Worship", query: "Digno de Alabar Elevation" },
+    { titulo: "A Tus Pies", artista: "Miel San Marcos", query: "A tus pies Miel San Marcos" },
+    { titulo: "Hermoso Nombre", artista: "Hillsong en Español", query: "Hermoso Nombre Hillsong" }
+  ];
+  let cancionSeleccionada = cancionesAdoracion[0];
 
   window.addEventListener('DOMContentLoaded', () => {
     document.getElementById("fecha-hoy").innerText = new Date().toLocaleDateString("es-AR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    
+    // Inicializar configuraciones locales
+    cargarTema();
+    gestionarRacha();
+    cargarNotasGuardadas();
+    renderizarPeticiones();
+    
     generarDevocionalAutomatico();
   });
 
+  // --- SISTEMA DE TEMAS (CLARO/OSCURO) ---
+  function alternarTema() {
+    const actual = document.body.getAttribute("data-theme");
+    const nuevo = actual === "light" ? "dark" : "light";
+    document.body.setAttribute("data-theme", nuevo);
+    localStorage.setItem("app_theme", nuevo);
+  }
+
+  function cargarTema() {
+    const guardado = localStorage.getItem("app_theme") || "dark";
+    document.body.setAttribute("data-theme", guardado);
+  }
+
+  // --- SISTEMA DE RACHAS ---
+  function gestionarRacha() {
+    const hoyStr = new Date().toLocaleDateString("es-AR");
+    const ayer = new Date();
+    ayer.setDate(ayer.getDate() - 1);
+    const ayerStr = ayer.toLocaleDateString("es-AR");
+
+    let racha = parseInt(localStorage.getItem("racha_devocional") || "0");
+    const ultimoAcceso = localStorage.getItem("ultimo_acceso_devocional");
+
+    if (ultimoAcceso !== hoyStr) {
+      if (ultimoAcceso === ayerStr) {
+        racha += 1;
+      } else if (!ultimoAcceso) {
+        racha = 1;
+      } else {
+        racha = 1; // Se rompió la racha
+      }
+      localStorage.setItem("racha_devocional", racha);
+      localStorage.setItem("ultimo_acceso_devocional", hoyStr);
+    }
+    document.getElementById("badge-racha").innerText = `🔥 ${racha} ${racha === 1 ? 'Día' : 'Días'}`;
+  }
+
+  // --- BLOC DE NOTAS ---
+  function cargarNotasGuardadas() {
+    const hoyStr = new Date().toLocaleDateString("es-AR");
+    const notaGuardada = localStorage.getItem(`nota_devocional_${hoyStr}`);
+    if (notaGuardada) {
+      document.getElementById("bloc-notas").value = notaGuardada;
+    }
+  }
+
+  function guardarNotas() {
+    const hoyStr = new Date().toLocaleDateString("es-AR");
+    const texto = document.getElementById("bloc-notas").value;
+    localStorage.setItem(`nota_devocional_${hoyStr}`, texto);
+  }
+
+  function copiarNotas() {
+    const texto = document.getElementById("bloc-notas").value;
+    if(!texto) { alert("¡Escribe algo primero!"); return; }
+    navigator.clipboard.writeText(texto);
+    alert("¡Notas copiadas al portapapeles con éxito!");
+  }
+
+  // --- CUADERNO DE ORACIÓN (PRIVADO) ---
+  function obtenerPeticiones() {
+    return JSON.parse(localStorage.getItem("lista_peticiones_oracion") || "[]");
+  }
+
+  function guardarPeticiones(lista) {
+    localStorage.setItem("lista_peticiones_oracion", JSON.stringify(lista));
+  }
+
+  function agregarPeticion() {
+    const input = document.getElementById("input-oracion");
+    const texto = input.value.trim();
+    if (!texto) return;
+
+    let peticiones = obtenerPeticiones();
+    peticiones.push({ id: Date.now(), texto: texto, respondida: false });
+    guardarPeticiones(peticiones);
+    
+    input.value = "";
+    renderizarPeticiones();
+  }
+
+  function alternarEstadoPeticion(id) {
+    let peticiones = obtenerPeticiones();
+    peticiones = peticiones.map(p => p.id === id ? { ...p, respondida: !p.respondida } : p);
+    guardarPeticiones(peticiones);
+    renderizarPeticiones();
+  }
+
+  function eliminarPeticion(id) {
+    let peticiones = obtenerPeticiones();
+    peticiones = peticiones.filter(p => p.id !== id);
+    guardarPeticiones(peticiones);
+    renderizarPeticiones();
+  }
+
+  function renderizarPeticiones() {
+    const contenedor = document.getElementById("lista-peticiones");
+    const peticiones = obtenerPeticiones();
+    contenedor.innerHTML = "";
+
+    if (peticiones.length === 0) {
+      contenedor.innerHTML = `<p style="color: var(--texto-mutado); font-size:13px; margin:0;">No tienes peticiones guardadas aún.</p>`;
+      return;
+    }
+
+    peticiones.forEach(p => {
+      const div = document.createElement("div");
+      div.className = `oracion-item ${p.respondida ? 'respondida' : ''}`;
+      div.innerHTML = `
+        <span class="oracion-item-texto">${p.texto}</span>
+        <div class="oracion-acciones">
+          <button class="btn-pildora btn-pildora-check" onclick="alternarEstadoPeticion(${p.id})">
+            ${p.respondida ? '↩ Orando' : '✓ Respondida'}
+          </button>
+          <button class="btn-pildora btn-pildora-del" onclick="eliminarPeticion(${p.id})">✕</button>
+        </div>
+      `;
+      contenedor.appendChild(div);
+    });
+  }
+
+  // --- PLAYLIST INTELIGENTE ---
+  function establecerMusicaDinámica(textoClave) {
+    // Escoge una canción de forma aleatoria basada en el índice del día o texto clave
+    let index = Math.abs(textoClave.length % cancionesAdoracion.length);
+    cancionSeleccionada = cancionesAdoracion[index];
+    
+    document.getElementById("musica-titulo").innerText = `🎵 Sugerencia: ${cancionSeleccionada.titulo}`;
+    document.getElementById("musica-sub").innerText = `Por: ${cancionSeleccionada.artista}`;
+  }
+
+  function abrirMusica() {
+    const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(cancionSeleccionada.query)}`;
+    window.open(url, '_blank');
+  }
+
+  // --- BUSCADOR DE BIBLIA ---
   function buscarEnBiblia() {
     const pasaje = document.getElementById("input-pasaje-biblia").value.trim();
     if (!pasaje) { alert("Por favor, ingresa un pasaje bíblico."); return; }
@@ -327,12 +656,10 @@
     const urlBiblia = `https://www.biblegateway.com/passage/?search=${encodeURIComponent(pasaje)}&version=RVR1960&interface=print`;
     
     container.style.display = "block";
-    
-    setTimeout(() => {
-      iframe.src = urlBiblia;
-    }, 50);
+    setTimeout(() => { iframe.src = urlBiblia; }, 50);
   }
 
+  // --- CONTROL DE BACKEND / DEVOCIONAL AUTOMÁTICO ---
   async function generarDevocionalAutomatico() {
     const contenedor = document.getElementById("contenedor-devocional");
     try {
@@ -350,6 +677,7 @@
       }
 
       devocionalActual = data;
+      establecerMusicaDinámica(data.versiculo || "adoracion");
 
       contenedor.innerHTML = `
         <div class="bloque-devocional versiculo-destacado">
@@ -410,22 +738,18 @@
     window.open(urlShare, '_blank');
   }
 
-  // Función modificada para calcular y pintar el Día + Fecha real
   function configurarPlanDinamico(plan, fechaDevocional) {
     const grid = document.getElementById("grid-plan");
     grid.innerHTML = "";
 
-    // Parseamos la fecha del backend (DD/MM/AAAA)
     const partesFecha = fechaDevocional.split("/");
     const d = new Date(partesFecha[2], partesFecha[1] - 1, partesFecha[0]);
     
-    // Calculamos el lunes de esta semana específica
     const diaSemana = d.getDay();
     const diferencia = d.getDate() - diaSemana + (diaSemana === 0 ? -6 : 1);
     const lunesSemana = new Date(d.setDate(diferencia));
     const lunesFormateadoStr = lunesSemana.toLocaleDateString("es-AR");
 
-    // Reiniciar completados si cambió la semana calendario
     const ultimaSemanaRegistrada = localStorage.getItem("ultima_semana_leida");
     if (ultimaSemanaRegistrada !== lunesFormateadoStr) {
       localStorage.setItem("ultima_semana_leida", lunesFormateadoStr);
@@ -436,12 +760,8 @@
 
     plan.forEach((item, index) => {
       const estado = localStorage.getItem(`dinamico_plan_${index}`) === "completado";
-      
-      // Calculamos la fecha correspondiente para este casillero basándonos en el lunes
       const fechaDia = new Date(lunesSemana);
       fechaDia.setDate(lunesSemana.getDate() + index);
-      
-      // Formateamos para que devuelva "DD/MM" (ej: "06/07")
       const diaMesFormateado = `${String(fechaDia.getDate()).padStart(2, '0')}/${String(fechaDia.getMonth() + 1).padStart(2, '0')}`;
 
       const div = document.createElement("div");
@@ -456,7 +776,6 @@
         }
       };
       
-      // Mostramos el nombre del día junto con la fecha real calculada
       div.innerHTML = `
         <h4>${item.dia} ${diaMesFormateado}</h4>
         <p>${item.pasaje}</p>
