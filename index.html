@@ -249,7 +249,7 @@
 
 <div class="container">
 
-  <div class="seccion-titulo">✨ Devocional Guiado de Hoy</div>
+  <div class="seccion-titulo">✨ Devocional Guided de Hoy</div>
   <div class="card-principal" id="contenedor-devocional">
     <div class="loading-container">
       <div class="spinner"></div>
@@ -320,6 +320,18 @@
           <h3>🙏 Oración Altar</h3>
           <p>${data.oracion}</p>
         </div>
+        <div class="bloque-devocional" style="border-left-color: #a78bfa;">
+          <h3>🤔 Meditación Introspectiva</h3>
+          <p>${data.pregunta || 'Medita en la gracia divina hoy.'}</p>
+        </div>
+        <div class="bloque-devocional" style="border-left-color: #f43f5e;">
+          <h3>🎯 Desafío de Amor y Gratitud</h3>
+          <p>${data.desafio || 'Camina hoy recordando que eres aceptado en el Amado.'}</p>
+        </div>
+        <div class="bloque-devocional" style="border-left-color: #10b981;">
+          <h3>📚 Lectura Recomendada para hoy</h3>
+          <p>${data.lectura || 'Consulta el plan semanal abajo.'}</p>
+        </div>
         
         <div class="compartir-container">
           <button class="btn-share btn-wp" onclick="compartir('wa')">📲 WhatsApp</button>
@@ -351,31 +363,25 @@
     window.open(urlShare, '_blank');
   }
 
-  // NUEVA LÓGICA: Plan dinámico y limpieza semanal automática
   function configurarPlanDinamico(plan, fechaDevocional) {
     const grid = document.getElementById("grid-plan");
     grid.innerHTML = "";
 
-    // Detectar el identificador único de la lectura de esta semana basándonos en la fecha que mandó el servidor
     const partesFecha = fechaDevocional.split("/");
     const d = new Date(partesFecha[2], partesFecha[1] - 1, partesFecha[0]);
     
-    // Obtener el lunes de la semana actual para crear una "ID de semana" única
     const diaSemana = d.getDay();
     const diferencia = d.getDate() - diaSemana + (diaSemana === 0 ? -6 : 1);
     const lunesSemana = new Date(d.setDate(diferencia)).toLocaleDateString("es-AR");
 
-    // Si cambió la semana, borramos las lecturas guardadas anteriormente en el teléfono del usuario
     const ultimaSemanaRegistrada = localStorage.getItem("ultima_semana_leida");
     if (ultimaSemanaRegistrada !== lunesSemana) {
       localStorage.setItem("ultima_semana_leida", lunesSemana);
-      // Limpiar registros viejos del almacenamiento local
       for (let i = 0; i < 7; i++) {
         localStorage.removeItem(`dinamico_plan_${i}`);
       }
     }
 
-    // Dibujar los cuadritos interactivos con el plan de la IA
     plan.forEach((item, index) => {
       const estado = localStorage.getItem(`dinamico_plan_${index}`) === "completado";
       
