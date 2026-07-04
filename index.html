@@ -83,6 +83,7 @@
       justify-content: center;
       gap: 15px;
       margin-top: 15px;
+      flex-wrap: wrap;
     }
 
     .badge-control {
@@ -130,6 +131,40 @@
       margin-bottom: 35px;
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
       transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    /* ESTILOS RECORDATORIO */
+    .reminder-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .reminder-inputs {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .input-time {
+      background-color: var(--nota-bg);
+      border: 1px solid var(--borde);
+      color: var(--texto-claro);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+    }
+    .btn-toggle-reminder {
+      width: auto;
+      margin-top: 0;
+      padding: 10px 16px;
+      font-size: 14px;
+    }
+    .btn-toggle-reminder.activo {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
     }
 
     .bloque-devocional {
@@ -294,7 +329,6 @@
     .plan-dia .check-icono { font-size: 12px; color: var(--whatsapp); display: none; margin-top: 4px; font-weight: bold;}
     .plan-dia.completado .check-icono { display: block; }
 
-    /* Listas y Contenedores Nuevos (Oraciones e Historial) */
     .oracion-lista, .historial-notas-lista {
       margin-top: 15px;
       display: flex;
@@ -440,6 +474,18 @@
 
 <div class="container">
 
+  <!-- NUEVO: RECORDATORIO DIARIO -->
+  <div class="seccion-titulo">🚨 Mi Alarma de Devocional</div>
+  <div class="card-principal">
+    <div class="reminder-container">
+      <div class="reminder-inputs">
+        <span style="font-size: 14px; color: var(--texto-mutado);">Recordarme cada día a las:</span>
+        <input type="time" id="reminder-time" class="input-time" value="07:00">
+      </div>
+      <button id="btn-reminder" class="btn-toggle-reminder" onclick="alternarRecordatorio()">🔔 Activar Alerta</button>
+    </div>
+  </div>
+
   <!-- DEVOCIONAL AUTOMÁTICO -->
   <div class="seccion-titulo">✨ Devocional Diario de Hoy</div>
   <div class="card-principal" id="contenedor-devocional">
@@ -491,7 +537,6 @@
       <button style="background: #475569; margin-top: 0; flex: 1;" onclick="copyNotas()">📋 Copiar al portapapeles</button>
     </div>
 
-    <!-- NUEVO CONTENEDOR VISUAL: HISTORIAL -->
     <h4 style="margin: 25px 0 10px 0; font-size: 14px; color: #818cf8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">📂 Historial de Notas Guardadas</h4>
     <div class="historial-notas-lista" id="lista-historial-notas"></div>
   </div>
@@ -499,7 +544,7 @@
   <!-- CUADERNO DE ORACIÓN -->
   <div class="seccion-titulo">🧎‍♂️ Mi Cuaderno de Oración</div>
   <div class="card-principal">
-    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Guarda tus Peticiones. Al ver la respuesta de Dios, márcalas como testimonio.</p>
+    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Guarda tus intenciones. Al ver la respuesta de Dios, márcalas como testimonio.</p>
     <div class="oracion-form-container">
       <input type="text" id="input-oracion" class="input-oracion" placeholder="Ej: Por la salud de mi familia / Por sabiduría...">
       <button onclick="agregarPeticion()">Añadir Petición</button>
@@ -532,6 +577,7 @@
     { titulo: "Hermoso Nombre", artista: "Hillsong en Español", query: "Hermoso Nombre Hillsong" }
   ];
   let cancionSeleccionada = cancionesAdoracion[0];
+  let revisorRelojAlarma = null;
 
   window.addEventListener('DOMContentLoaded', () => {
     document.getElementById("fecha-hoy").innerText = new Date().toLocaleDateString("es-AR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -541,6 +587,7 @@
     cargarBorradorNota();
     renderizarPeticiones();
     renderizarHistorialNotas();
+    inicializarRecordatorio();
     
     generarDevocionalAutomatico();
   });
@@ -580,7 +627,90 @@
     document.getElementById("badge-racha").innerText = `🔥 ${racha} ${racha === 1 ? 'Día' : 'Días'}`;
   }
 
-  // --- NUEVA LÓGICA DE NOTAS (BORRADOR + HISTORIAL SEPARADOS) ---
+  // --- NUEVA LÓGICA DE RECORDATORIOS (NOTIFICACIONES) ---
+  function inicializarRecordatorio() {
+    const horaGuardada = localStorage.getItem("reminder_time") || "07:00";
+    const estadoGuardado = localStorage.getItem("reminder_enabled") === "true";
+    
+    document.getElementById("reminder-time").value = horaGuardada;
+    
+    if (estadoGuardado) {
+      activarBucleAlarma(horaGuardada);
+      const btn = document.getElementById("btn-reminder");
+      btn.classList.add("activo");
+      btn.innerText = "🔕 Desactivar";
+    }
+  }
+
+  function alternarRecordatorio() {
+    const btn = document.getElementById("btn-reminder");
+    const inputHora = document.getElementById("reminder-time");
+    const estaActivo = btn.classList.contains("activo");
+
+    if (!estaActivo) {
+      // Intentar pedir permisos de notificación
+      if (!("Notification" in window)) {
+        alert("Este navegador no soporta notificaciones de escritorio.");
+        return;
+      }
+
+      Notification.requestPermission().then(permiso => {
+        if (permiso === "granted") {
+          localStorage.setItem("reminder_enabled", "true");
+          localStorage.setItem("reminder_time", inputHora.value);
+          
+          activarBucleAlarma(inputHora.value);
+          
+          btn.classList.add("activo");
+          btn.innerText = "🔕 Desactivar";
+          
+          // Notificación de prueba inmediata
+          new Notification("¡Recordatorio Activo! 🔔", {
+            body: `Te avisaremos todos los días a las ${inputHora.value} para tu devocional.`,
+            icon: "https://images.unsplash.com/photo-1504052434569-70ad58565b90?w=100"
+          });
+        } else {
+          alert("Necesitamos que apruebes los permisos de notificación para poder avisarte.");
+        }
+      });
+    } else {
+      // Desactivar
+      localStorage.setItem("reminder_enabled", "false");
+      if (revisorRelojAlarma) clearInterval(revisorRelojAlarma);
+      
+      btn.classList.remove("activo");
+      btn.innerText = "🔔 Activar Alerta";
+      alert("Recordatorio desactivado.");
+    }
+  }
+
+  function activarBucleAlarma(horaAlarma) {
+    if (revisorRelojAlarma) clearInterval(revisorRelojAlarma);
+
+    // Se ejecuta una revisión cada 30 segundos
+    revisorRelojAlarma = setInterval(() => {
+      const ahora = new Date();
+      const horaActual = String(ahora.getHours()).padStart(2, '0');
+      const minutosActuales = String(ahora.getMinutes()).padStart(2, '0');
+      const tiempoActualStr = `${horaActual}:${minutosActuales}`;
+
+      if (tiempoActualStr === horaAlarma) {
+        // Para evitar múltiples disparos en el mismo minuto, registramos el día enviado
+        const hoyId = ahora.toLocaleDateString("es-AR");
+        if (localStorage.getItem("last_notification_sent_day") !== hoyId) {
+          localStorage.setItem("last_notification_sent_day", hoyId);
+          
+          new Notification("✨ Tu Momento con Dios", {
+            body: "Es hora de tu pausa espiritual. Tu devocional diario ya está esperándote.",
+            tag: "devocional-reminder",
+            requireInteraction: true // Mantiene la alerta visible hasta que el usuario la cierre
+          });
+        }
+      }
+    }, 30000);
+  }
+
+  // --- LÓGICA DE NOTAS ---
   function cargarBorradorNota() {
     const borrador = localStorage.getItem("devocional_nota_borrador");
     if (borrador) {
@@ -622,7 +752,6 @@
 
     localStorage.setItem("devocional_historial_notas", JSON.stringify(notas));
     
-    // Limpiamos el panel actual
     document.getElementById("bloc-notas").value = "";
     localStorage.removeItem("devocional_nota_borrador");
 
