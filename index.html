@@ -110,9 +110,8 @@
       font-style: italic;
     }
 
-    textarea {
+    textarea, .input-biblia {
       width: 100%;
-      height: 90px;
       background-color: #0f172a;
       border: 1px solid var(--borde);
       border-radius: 12px;
@@ -120,14 +119,33 @@
       color: var(--texto-claro);
       font-family: inherit;
       font-size: 14px;
-      resize: none;
       box-sizing: border-box;
       transition: border-color 0.2s;
     }
 
-    textarea:focus {
+    textarea {
+      height: 90px;
+      resize: none;
+    }
+
+    textarea:focus, .input-biblia:focus {
       outline: none;
       border-color: var(--accent);
+    }
+
+    .buscador-biblia-container {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .buscador-biblia-container input {
+      flex: 2;
+    }
+
+    .buscador-biblia-container button {
+      flex: 1;
+      margin-top: 0;
     }
 
     button {
@@ -217,7 +235,7 @@
     }
 
     .plan-dia h4 { margin: 0 0 4px 0; font-size: 14px; color: #f1f5f9; }
-    .plan-dia p { margin: 0; font-size: 12px; color: var(--texto-mutado); }
+    .plan-dia p { margin: 0; font-size: 12px; color: var(--texto-mutated); }
     .plan-dia .check-icono { font-size: 12px; color: var(--whatsapp); display: none; margin-top: 4px;}
     .plan-dia.completado .check-icono { display: block; }
 
@@ -274,16 +292,51 @@
     </div>
   </div>
 
+  <!-- SECCIÓN DE CONSULTA BÍBLICA DIGITAL -->
+  <div class="seccion-titulo">📜 Consulta la Biblia Online</div>
+  <div class="card-principal">
+    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Escribe el pasaje o libro que deseas leer (Ejemplo: Romanos 8, Juan 3:16).</p>
+    <div class="buscador-biblia-container">
+      <input type="text" id="input-pasaje-biblia" class="input-biblia" placeholder="Buscar libro, capítulo o versículo...">
+      <button onclick="buscarEnBiblia()">Abrir Biblia</button>
+    </div>
+    <div id="frame-biblia-container" style="margin-top: 20px; display: none;">
+      <iframe id="iframe-biblia" style="width:100%; height:500px; border:1px solid var(--borde); border-radius:12px; background: #ffffff;" src=""></iframe>
+    </div>
+  </div>
+
 </div>
 
 <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbw8jv3ZZ2BYVBaJ_bEBsZNNil88QLlzB1w3YARN959FGwqTkVxsIdelU-H6357P62iXLQ/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbxzTVyVtiSVKrT7zMOEuZEqLDQVUU-2BZnu7pYAvocEjYrDl2cC8V0Mnk_MM4L4eYR6NQ/exec";
   let devocionalActual = null;
 
   window.addEventListener('DOMContentLoaded', () => {
     document.getElementById("fecha-hoy").innerText = new Date().toLocaleDateString("es-AR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     generarDevocionalAutomatico();
   });
+
+  // Función optimizada para abrir e incrustar la Biblia sin bloqueos
+  function buscarEnBiblia() {
+    const pasaje = document.getElementById("input-pasaje-biblia").value.trim();
+    if (!pasaje) { alert("Por favor, ingresa un pasaje bíblico."); return; }
+    
+    const container = document.getElementById("frame-biblia-container");
+    const iframe = document.getElementById("iframe-biblia");
+    
+    // Limpiamos el iframe viejo para evitar heredar bloqueos del navegador
+    iframe.src = "about:blank";
+    
+    // Generamos la URL de BibleGateway (Versión Reina Valera 1960 en formato limpio de impresión)
+    const urlBiblia = `https://www.biblegateway.com/passage/?search=${encodeURIComponent(pasaje)}&version=RVR1960&interface=print`;
+    
+    container.style.display = "block";
+    
+    // Agregamos un ligero retraso para asegurar el render dinámico correcto
+    setTimeout(() => {
+      iframe.src = urlBiblia;
+    }, 50);
+  }
 
   async function generarDevocionalAutomatico() {
     const contenedor = document.getElementById("contenedor-devocional");
@@ -340,7 +393,6 @@
         </div>
       `;
 
-      // Cargar el plan dinámico enviado por la IA
       if(data.plan_semanal) {
         configurarPlanDinamico(data.plan_semanal, data.fecha);
       }
