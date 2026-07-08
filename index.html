@@ -133,40 +133,6 @@
       transition: background-color 0.3s, border-color 0.3s;
     }
 
-    /* ESTILOS RECORDATORIO */
-    .reminder-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-    .reminder-inputs {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .input-time {
-      background-color: var(--nota-bg);
-      border: 1px solid var(--borde);
-      color: var(--texto-claro);
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 14px;
-      outline: none;
-    }
-    .btn-toggle-reminder {
-      width: auto;
-      margin-top: 0;
-      padding: 10px 16px;
-      font-size: 14px;
-    }
-    .btn-toggle-reminder.activo {
-      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
-    }
-
     .bloque-devocional {
       border-left: 3px solid #3b82f6;
       padding-left: 16px;
@@ -200,7 +166,7 @@
       font-style: italic;
     }
 
-    textarea, .input-biblia, .input-oracion {
+    textarea, .input-diccionario {
       width: 100%;
       background-color: var(--nota-bg);
       border: 1px solid var(--borde);
@@ -218,22 +184,22 @@
       resize: none;
     }
 
-    textarea:focus, .input-biblia:focus, .input-oracion:focus {
+    textarea:focus, .input-diccionario:focus {
       outline: none;
       border-color: var(--accent);
     }
 
-    .buscador-biblia-container, .oracion-form-container {
+    .buscador-diccionario-container {
       display: flex;
       gap: 10px;
       margin-top: 10px;
     }
 
-    .buscador-biblia-container input, .oracion-form-container input {
+    .buscador-diccionario-container input {
       flex: 2;
     }
 
-    .buscador-biblia-container button, .oracion-form-container button {
+    .buscador-diccionario-container button {
       flex: 1;
       margin-top: 0;
     }
@@ -258,12 +224,23 @@
       box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
     }
 
-    button:disabled {
-      background: #334155;
-      color: var(--texto-mutado);
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
+    .audio-control-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .btn-audio {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      font-size: 14px;
+    }
+
+    .btn-audio.reproduciendo {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     }
 
     .compartir-container {
@@ -295,7 +272,6 @@
     .btn-share:hover { opacity: 0.9; }
     .btn-wp { background-color: var(--whatsapp); }
     .btn-fb { background-color: var(--facebook); }
-    .btn-tw { background-color: #000000; border: 1px solid #334155; }
 
     .plan-grid {
       display: grid;
@@ -310,136 +286,34 @@
       border-radius: 10px;
       padding: 12px;
       text-align: center;
-      cursor: pointer;
-      transition: all 0.2s, background-color 0.3s;
-    }
-
-    .plan-dia:hover {
-      border-color: var(--accent);
-      background-color: var(--bg-tarjeta);
-    }
-
-    .plan-dia.completado {
-      border-color: var(--whatsapp);
-      background: rgba(37, 211, 102, 0.08);
     }
 
     .plan-dia h4 { margin: 0 0 4px 0; font-size: 14px; color: var(--texto-claro); }
-    .plan-dia p { margin: 0; font-size: 12px; color: var(--texto-mutado); }
-    .plan-dia .check-icono { font-size: 12px; color: var(--whatsapp); display: none; margin-top: 4px; font-weight: bold;}
-    .plan-dia.completado .check-icono { display: block; }
+    .plan-dia p { margin: 0; font-size: 12px; color: var(--texto-mutated || var(--texto-mutado)); }
 
-    .oracion-lista, .historial-notas-lista {
+    .resultado-diccionario {
       margin-top: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      background-color: var(--nota-bg);
+      border-left: 3px solid #a78bfa;
+      padding: 14px;
+      border-radius: 0 8px 8px 0;
     }
 
-    .oracion-item, .nota-archivada-item {
-      background: var(--nota-bg);
-      border: 1px solid var(--borde);
-      padding: 12px 15px;
-      border-radius: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
+    .resultado-diccionario h4 {
+      margin: 0 0 6px 0;
+      color: #a78bfa;
+      font-size: 15px;
     }
 
-    .nota-archivada-item {
-      flex-direction: column;
-      align-items: flex-start;
+    [data-theme="light"] .resultado-diccionario h4 {
+      color: #7c3aed;
     }
 
-    .nota-meta {
-      font-size: 11px;
-      color: #818cf8;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    [data-theme="light"] .nota-meta {
-      color: #4f46e5;
-    }
-
-    .oracion-item.respondida {
-      border-color: #eab308;
-      background: rgba(234, 179, 8, 0.05);
-    }
-
-    .oracion-item-texto, .nota-archivada-texto {
+    .resultado-diccionario p {
+      margin: 0;
       font-size: 14px;
-      color: var(--texto-claro);
-      white-space: pre-line;
+      opacity: 0.9;
     }
-
-    .oracion-item.respondida .oracion-item-texto {
-      text-decoration: line-through;
-      color: var(--texto-mutado);
-    }
-
-    .oracion-acciones, .nota-archivada-acciones {
-      display: flex;
-      gap: 8px;
-    }
-
-    .nota-archivada-header {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      align-items: flex-start;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      padding-bottom: 6px;
-      margin-bottom: 6px;
-    }
-
-    [data-theme="light"] .nota-archivada-header {
-      border-bottom-color: rgba(0,0,0,0.05);
-    }
-
-    .btn-pildora {
-      padding: 4px 8px;
-      font-size: 12px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      margin: 0;
-      width: auto;
-      box-shadow: none;
-    }
-
-    .btn-pildora:hover { transform: none; }
-    .btn-pildora-check { background: #eab308; color: #000; }
-    .btn-pildora-del { background: #ef4444; color: white; }
-    .btn-pildora-copy { background: #475569; color: white; }
-
-    .playlist-box {
-      background: linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
-      border: 1px dashed #818cf8;
-      padding: 16px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-    }
-
-    .playlist-info h4 { margin: 0 0 4px 0; font-size: 15px; color: var(--texto-claro); }
-    .playlist-info p { margin: 0; font-size: 13px; color: var(--texto-mutado); }
-    
-    .btn-playlist {
-      background: #1ed760;
-      color: black;
-      font-size: 13px;
-      padding: 8px 16px;
-      border-radius: 20px;
-      width: auto;
-      margin: 0;
-      box-shadow: none;
-    }
-    .btn-playlist:hover { background: #1db954; }
 
     .loading-container {
       text-align: center;
@@ -448,7 +322,7 @@
     }
 
     .spinner {
-      border: 3px solid rgba(255,255,255,0.1);
+      border: 3px solid rgba(255, 255, 255, 0.1);
       width: 36px;
       height: 36px;
       border-radius: 50%;
@@ -474,20 +348,7 @@
 
 <div class="container">
 
-  <!-- NUEVO: RECORDATORIO DIARIO -->
-  <div class="seccion-titulo">🚨 Mi Alarma de Devocional</div>
-  <div class="card-principal">
-    <div class="reminder-container">
-      <div class="reminder-inputs">
-        <span style="font-size: 14px; color: var(--texto-mutado);">Recordarme cada día a las:</span>
-        <input type="time" id="reminder-time" class="input-time" value="07:00">
-      </div>
-      <button id="btn-reminder" class="btn-toggle-reminder" onclick="alternarRecordatorio()">🔔 Activar Alerta</button>
-    </div>
-  </div>
-
-  <!-- DEVOCIONAL AUTOMÁTICO -->
-  <div class="seccion-titulo">✨ Devocional Diario de Hoy</div>
+  <div class="seccion-titulo">✨ Devocional Guided de Hoy</div>
   <div class="card-principal" id="contenedor-devocional">
     <div class="loading-container">
       <div class="spinner"></div>
@@ -495,100 +356,64 @@
     </div>
   </div>
 
-  <!-- PLAYLIST RECOMENDADA -->
-  <div class="seccion-titulo">🎵 Adoración para Acompañar</div>
+  <div class="seccion-titulo">📚 Diccionario Teológico Reformado</div>
   <div class="card-principal">
-    <div class="playlist-box">
-      <div class="playlist-info">
-        <h4 id="musica-titulo">Cargando sugerencia...</h4>
-        <p id="musica-sub">Una atmósfera de paz para tu devocional</p>
-      </div>
-      <button class="btn-playlist" id="btn-abrir-musica" onclick="abrirMusica()">▶ Escuchar</button>
+    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">¿Encontraste un término profundo en la reflexión? Buscalo acá al instante.</p>
+    <div class="buscador-diccionario-container">
+      <input type="text" id="input-glosario" class="input-diccionario" placeholder="Ej: Monergismo, Soteriología, Justificación...">
+      <button onclick="buscarEnDiccionario()">Buscar Término</button>
     </div>
+    <div id="area-resultado-diccionario" style="display: none;"></div>
   </div>
 
-  <!-- DEVOCIONAL PERSONALIZADO -->
   <div class="seccion-titulo">💬 Devocional Bíblico Personalizado</div>
   <div class="card-principal">
-    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">¿Estás pasando por algo específico? Contame cómo te sentís para recibir dirección bíblica.</p>
+    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">¿Estás pasando por algo específico? Contame cómo te sentís para recibir dirección bíblica bajo la gracia.</p>
     <textarea id="consulta" placeholder="Ej: Me siento ansioso por el futuro / Necesito fortaleza para perdonar..."></textarea>
     <button id="btnPalabra" onclick="palabraPersonalizada()">Generar Devocional</button>
     
     <div id="contenedor-respuesta" style="margin-top: 25px; display: none;"></div>
   </div>
 
-  <!-- PLAN SEMANAL -->
-  <div class="seccion-titulo">📅 Plan de Estudio Bíblico (Semanal)</div>
+  <div class="seccion-titulo">📅 Plan de Estudio Bíblico (Semanal Fijo)</div>
   <div class="card-principal">
-    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Marcá los capítulos leídos. Este plan cambia automáticamente cada semana.</p>
+    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Cronograma de lectura sistemática e inamovible para esta semana.</p>
     <div class="plan-grid" id="grid-plan">
-      <p style="color: var(--texto-mutado); font-size: 13px;">Cargando plan semanal...</p>
-    </div>
-  </div>
-
-  <!-- BLOC DE NOTAS CON HISTORIAL LOCAL -->
-  <div class="seccion-titulo">🖍️ Mis Notas de Hoy</div>
-  <div class="card-principal">
-    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Escribe lo que sientas. Se guardará en borrador, y puedes archivarlo permanentemente abajo.</p>
-    <textarea id="bloc-notas" placeholder="Escribe aquí tus reflexiones y revelaciones de hoy..." oninput="guardarBorradorNota()"></textarea>
-    
-    <div style="display: flex; gap: 10px; margin-top: 10px;">
-      <button style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-top: 0; flex: 1;" onclick="archivarNotaHistorial()">💾 Guardar en mi Historial</button>
-      <button style="background: #475569; margin-top: 0; flex: 1;" onclick="copyNotas()">📋 Copiar al portapapeles</button>
-    </div>
-
-    <h4 style="margin: 25px 0 10px 0; font-size: 14px; color: #818cf8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">📂 Historial de Notas Guardadas</h4>
-    <div class="historial-notas-lista" id="lista-historial-notas"></div>
-  </div>
-
-  <!-- CUADERNO DE ORACIÓN -->
-  <div class="seccion-titulo">🧎‍♂️ Mi Cuaderno de Oración</div>
-  <div class="card-principal">
-    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Guarda tus intenciones. Al ver la respuesta de Dios, márcalas como testimonio.</p>
-    <div class="oracion-form-container">
-      <input type="text" id="input-oracion" class="input-oracion" placeholder="Ej: Por la salud de mi familia / Por sabiduría...">
-      <button onclick="agregarPeticion()">Añadir Petición</button>
-    </div>
-    <div class="oracion-lista" id="lista-peticiones"></div>
-  </div>
-
-  <!-- BIBLIA ONLINE -->
-  <div class="seccion-titulo">📜 Consulta la Biblia Online</div>
-  <div class="card-principal">
-    <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Escribe el pasaje o libro que deseas leer (Ejemplo: Romanos 8, Juan 3:16).</p>
-    <div class="buscador-biblia-container">
-      <input type="text" id="input-pasaje-biblia" class="input-biblia" placeholder="Buscar libro, capítulo o versículo...">
-      <button onclick="buscarEnBiblia()">Abrir Biblia</button>
-    </div>
-    <div id="frame-biblia-container" style="margin-top: 20px; display: none;">
-      <iframe id="iframe-biblia" style="width:100%; height:500px; border:1px solid var(--borde); border-radius:12px; background: #ffffff;" src=""></iframe>
+      <p style="color: var(--texto-mutado); font-size: 13px;">Cargando plan de lectura semanal...</p>
     </div>
   </div>
 
 </div>
 
 <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbxSFrn8bdccvFx6u_mfXdHsJTN_ZCKKXL89jhXIjjUvywrYQKzif7mVzWb5rg-tr1zk/exec";
+  // REEMPLAZÁ ESTA URL CON TU NUEVA IMPLEMENTACIÓN DE GOOGLE APPS SCRIPT SI ES NECESARIO
+  const API_URL = "https://script.google.com/macros/s/AKfycbw6H3Z0Hh35Uv7v1oI1pL1bH1N1p-Y1M1P1v1N1/exec"; 
   let devocionalActual = null;
-  let cancionesAdoracion = [
-    { titulo: "La Bondad de Dios", artista: "Bethel Music", query: "La bondad de Dios En Vivo" },
-    { titulo: "Digno de Alabar", artista: "Elevation Worship", query: "Digno de Alabar Elevation" },
-    { titulo: "A Tus Pies", artista: "Miel San Marcos", query: "A tus pies Miel San Marcos" },
-    { titulo: "Hermoso Nombre", artista: "Hillsong en Español", query: "Hermoso Nombre Hillsong" }
-  ];
-  let cancionSeleccionada = cancionesAdoracion[0];
-  let revisorRelojAlarma = null;
+
+  // BASE DE DATOS LOCAL: Diccionario Teológico Reformado
+  const DICCIONARIO_REFORMADO = {
+    "soteriologia": "Rama de la teología sistemática que estudia la doctrina de la salvación. En la teología reformada, se centra en que la salvación es enteramente por la gracia soberana de Dios (Monergismo), detallada en los Cinco Puntos del Calvinismo (TULIP).",
+    "monergismo": "Creencia de que solo Dios actúa para efectuar la salvación del pecador, sin la cooperación del libre albedrío humano. El Espíritu Santo regenera el corazón muerto espiritualmente para que este pueda creer de forma voluntaria.",
+    "sinergismo": "Postura teológica contraria al monergismo; sostiene que la salvación se logra mediante la cooperación entre la gracia de Dios y el libre albedrío del ser humano. Rechazada por la teología reformada.",
+    "providencia": "El cuidado soberano, continuo y fiel por el cual Dios sostiene, guía y gobierna todas las cosas creadas, desde la estrella más grande hasta el detalle más pequeño de nuestras vidas, para el cumplimiento de sus santos propósitos.",
+    "gracia irresistible": "El cuarto punto de las Doctrinas de la Gracia. Afirma que cuando el Espíritu Santo llama eficazmente a un elegido a la salvación, este no puede resistirse de manera definitiva; la gracia transforma el corazón de piedra en uno de carne, haciendo que responda con fe y amor.",
+    "justificacion": "Acto legal y judicial de Dios por el cual declara justo al pecador, no porque este sea inherentemente santo, sino porque le imputa (le acredita) la justicia perfecta y el sacrificio de Cristo en la cruz, recibido únicamente mediante la fe.",
+    "eleccion": "El acto soberano y eterno de Dios, previo a la fundación del mundo, por el cual escogió de manera incondicional a ciertos individuos para ser redimidos en Cristo, motivado puramente por su beneplácito y amor, y no por prever algún mérito en ellos.",
+    "depravacion total": "Primer punto de las Doctrinas de la Gracia. Establece que a causa de la caída, el ser humano está completamente afectado por el pecado en todas sus facultades (mente, voluntad y emociones), estando espiritualmente muerto e incapacitado para buscar o elegir a Dios por sus propias fuerzas.",
+    "expiacion limitada": "También llamada 'Redención Particular'. Tercer punto de las Doctrinas de la Gracia; enseña que el sacrificio de Cristo en la cruz tuvo el propósito específico y efectivo de salvar y garantizar la redención únicamente de los elegidos por el Padre.",
+    "perseverancia de los santos": "Quinto punto de las Doctrinas de la Gracia. Asegura que aquellos a quienes Dios ha salvado y sellado con el Espíritu Santo nunca se perderán ni apostatarán totalmente, sino que serán preservados por el poder divino hasta el fin del camino.",
+    "teologia reformada": "Sistema teológico e histórico cristiano nacido de la Reforma Protestante del siglo XVI (con raíces en Juan Calvino). Enfatiza la autoridad absoluta de las Escrituras, la soberanía de Dios sobre la creación y la salvación completamente por gracia.",
+    "gracia soberana": "El favor inmerecido de Dios otorgado libremente según su propia voluntad y autoridad real, totalmente independiente de las obras, intenciones o condiciones del receptor."
+  };
+
+  // CONFIGURACIÓN DE AUDIO (Texto a voz nativo)
+  let emisorVoz = null;
+  let estaReproduciendoAudio = false;
 
   window.addEventListener('DOMContentLoaded', () => {
     document.getElementById("fecha-hoy").innerText = new Date().toLocaleDateString("es-AR", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    
     cargarTema();
     gestionarRacha();
-    cargarBorradorNota();
-    renderizarPeticiones();
-    renderizarHistorialNotas();
-    inicializarRecordatorio();
-    
     generarDevocionalAutomatico();
   });
 
@@ -614,381 +439,145 @@
     const ultimoAcceso = localStorage.getItem("ultimo_acceso_devocional");
 
     if (ultimoAcceso !== hoyStr) {
-      if (ultimoAcceso === ayerStr) {
-        racha += 1;
-      } else if (!ultimoAcceso) {
-        racha = 1;
-      } else {
-        racha = 1; 
-      }
+      if (ultimoAcceso === ayerStr) racha += 1;
+      else racha = 1; 
       localStorage.setItem("racha_devocional", racha);
       localStorage.setItem("ultimo_acceso_devocional", hoyStr);
     }
     document.getElementById("badge-racha").innerText = `🔥 ${racha} ${racha === 1 ? 'Día' : 'Días'}`;
   }
 
-  // --- NUEVA LÓGICA DE RECORDATORIOS (NOTIFICACIONES) ---
-  function inicializarRecordatorio() {
-    const horaGuardada = localStorage.getItem("reminder_time") || "07:00";
-    const estadoGuardado = localStorage.getItem("reminder_enabled") === "true";
+  // --- MOTOR DEL DICCIONARIO TEOLÓGICO ---
+  function buscarEnDiccionario() {
+    const terminoInput = document.getElementById("input-glosario").value.trim().toLowerCase();
+    const cajaResultado = document.getElementById("area-resultado-diccionario");
+
+    if (!terminoInput) return;
+
+    // Quitamos acentos para facilitar la búsqueda
+    const terminoLimpio = terminoInput.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     
-    document.getElementById("reminder-time").value = horaGuardada;
-    
-    if (estadoGuardado) {
-      activarBucleAlarma(horaGuardada);
-      const btn = document.getElementById("btn-reminder");
-      btn.classList.add("activo");
-      btn.innerText = "🔕 Desactivar";
+    let definicion = DICCIONARIO_REFORMADO[terminoLimpio];
+
+    // Si no lo encuentra directo, busca coincidencias parciales
+    if (!definicion) {
+      const llaves = Object.keys(DICCIONARIO_REFORMADO);
+      const coincidencia = llaves.find(k => k.includes(terminoLimpio) || terminoLimpio.includes(k));
+      if (coincidencia) definicion = DICCIONARIO_REFORMADO[coincidencia];
     }
-  }
 
-  function alternarRecordatorio() {
-    const btn = document.getElementById("btn-reminder");
-    const inputHora = document.getElementById("reminder-time");
-    const estaActivo = btn.classList.contains("activo");
+    cajaResultado.style.display = "block";
 
-    if (!estaActivo) {
-      // Intentar pedir permisos de notificación
-      if (!("Notification" in window)) {
-        alert("Este navegador no soporta notificaciones de escritorio.");
-        return;
-      }
-
-      Notification.requestPermission().then(permiso => {
-        if (permiso === "granted") {
-          localStorage.setItem("reminder_enabled", "true");
-          localStorage.setItem("reminder_time", inputHora.value);
-          
-          activarBucleAlarma(inputHora.value);
-          
-          btn.classList.add("activo");
-          btn.innerText = "🔕 Desactivar";
-          
-          // Notificación de prueba inmediata
-          new Notification("¡Recordatorio Activo! 🔔", {
-            body: `Te avisaremos todos los días a las ${inputHora.value} para tu devocional.`,
-            icon: "https://images.unsplash.com/photo-1504052434569-70ad58565b90?w=100"
-          });
-        } else {
-          alert("Necesitamos que apruebes los permisos de notificación para poder avisarte.");
-        }
-      });
+    if (definicion) {
+      cajaResultado.innerHTML = `
+        <div class="resultado-diccionario">
+          <h4>📖 ${terminoInput.toUpperCase()}</h4>
+          <p>${definicion}</p>
+        </div>
+      `;
     } else {
-      // Desactivar
-      localStorage.setItem("reminder_enabled", "false");
-      if (revisorRelojAlarma) clearInterval(revisorRelojAlarma);
+      cajaResultado.innerHTML = `
+        <div class="resultado-diccionario" style="border-left-color: #ef4444;">
+          <h4 style="color: #ef4444;">🔍 Término no encontrado</h4>
+          <p>No encontramos ese concepto teológico exacto en la base de datos de las Doctrinas de la Gracia. Intentá con palabras clave como <i>Monergismo, Gracia, Justificación o Soteriología</i>.</p>
+        </div>
+      `;
+    }
+  }
+
+  // --- MOTOR DE AUDIO (TEXTO A VOZ NATIVO) ---
+  function alternarAudioDevocional() {
+    const botonAudio = document.getElementById("btn-reproductor-voz");
+    
+    if (!devocionalActual) return;
+
+    if (estaReproduciendoAudio) {
+      // Si ya está hablando, lo pausamos por completo
+      window.speechSynthesis.cancel();
+      estaReproduciendoAudio = false;
+      botonAudio.classList.remove("reproduciendo");
+      botonAudio.innerText = "🔊 Escuchar Devocional";
+    } else {
+      // Preparamos todo el texto completo ordenadamente
+      const textoParaLeer = `
+        Pasaje clave de hoy. ${devocionalActual.versiculo}. 
+        Reflexión teológica. ${devocionalActual.reflexion}. 
+        Aplicación práctica para tu día. ${devocionalActual.aplicacion}.
+        Oración para terminar. ${devocionalActual.oracion}.
+      `;
+
+      emisorVoz = new SpeechSynthesisUtterance(textoParaLeer);
+      emisorVoz.lang = 'es-AR'; // Forzamos acento en español neutro / latinoamericano
+      emisorVoz.rate = 0.95;    // Velocidad pausada e introspectiva pastoral
+
+      emisorVoz.onend = () => {
+        estaReproduciendoAudio = false;
+        botonAudio.classList.remove("reproduciendo");
+        botonAudio.innerText = "🔊 Escuchar Devocional";
+      };
+
+      emisorVoz.onerror = () => {
+        estaReproduciendoAudio = false;
+        botonAudio.classList.remove("reproduciendo");
+        botonAudio.innerText = "🔊 Escuchar Devocional";
+      };
+
+      estaReproduciendoAudio = true;
+      botonAudio.classList.add("reproduciendo");
+      botonAudio.innerText = "⏹️ Detener Audio";
       
-      btn.classList.remove("activo");
-      btn.innerText = "🔔 Activar Alerta";
-      alert("Recordatorio desactivado.");
+      window.speechSynthesis.speak(emisorVoz);
     }
   }
 
-  function activarBucleAlarma(horaAlarma) {
-    if (revisorRelojAlarma) clearInterval(revisorRelojAlarma);
-
-    // Se ejecuta una revisión cada 30 segundos
-    revisorRelojAlarma = setInterval(() => {
-      const ahora = new Date();
-      const horaActual = String(ahora.getHours()).padStart(2, '0');
-      const minutosActuales = String(ahora.getMinutes()).padStart(2, '0');
-      const tiempoActualStr = `${horaActual}:${minutosActuales}`;
-
-      if (tiempoActualStr === horaAlarma) {
-        // Para evitar múltiples disparos en el mismo minuto, registramos el día enviado
-        const hoyId = ahora.toLocaleDateString("es-AR");
-        if (localStorage.getItem("last_notification_sent_day") !== hoyId) {
-          localStorage.setItem("last_notification_sent_day", hoyId);
-          
-          new Notification("✨ Tu Momento con Dios", {
-            body: "Es hora de tu pausa espiritual. Tu devocional diario ya está esperándote.",
-            tag: "devocional-reminder",
-            requireInteraction: true // Mantiene la alerta visible hasta que el usuario la cierre
-          });
-        }
-      }
-    }, 30000);
-  }
-
-  // --- LÓGICA DE NOTAS ---
-  function cargarBorradorNota() {
-    const borrador = localStorage.getItem("devocional_nota_borrador");
-    if (borrador) {
-      document.getElementById("bloc-notas").value = borrador;
-    }
-  }
-
-  function guardarBorradorNota() {
-    const texto = document.getElementById("bloc-notas").value;
-    localStorage.setItem("devocional_nota_borrador", texto);
-  }
-
-  function copyNotas() {
-    const texto = document.getElementById("bloc-notas").value;
-    if(!texto) { alert("¡Escribe algo primero!"); return; }
-    navigator.clipboard.writeText(texto);
-    alert("¡Borrador copiado al portapapeles!");
-  }
-
-  function obtenerNotasHistorialCompleto() {
-    return JSON.parse(localStorage.getItem("devocional_historial_notas") || "[]");
-  }
-
-  function archivarNotaHistorial() {
-    const texto = document.getElementById("bloc-notas").value.trim();
-    if (!texto) { alert("Por favor, escribe una reflexión antes de guardarla."); return; }
-
-    const ahora = new Date();
-    const fechaFormateada = ahora.toLocaleDateString("es-AR", { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-    const escrituraHoy = devocionalActual ? devocionalActual.versiculo.split("\n")[0] : "Estudio Personal";
-
-    let notas = obtenerNotasHistorialCompleto();
-    notas.unshift({
-      id: Date.now(),
-      fecha: fechaFormateada,
-      pasaje: escrituraHoy,
-      contenido: texto
-    });
-
-    localStorage.setItem("devocional_historial_notas", JSON.stringify(notas));
-    
-    document.getElementById("bloc-notas").value = "";
-    localStorage.removeItem("devocional_nota_borrador");
-
-    renderizarHistorialNotas();
-    alert("¡Nota guardada permanentemente en tu historial inferior!");
-  }
-
-  function eliminarNotaDelHistorial(id) {
-    if (!confirm("¿De verdad querés eliminar esta nota de tu historial?")) return;
-    let notas = obtenerNotasHistorialCompleto();
-    notas = notas.filter(n => n.id !== id);
-    localStorage.setItem("devocional_historial_notas", JSON.stringify(notas));
-    renderizarHistorialNotas();
-  }
-
-  function copiarNotaDelHistorial(texto) {
-    navigator.clipboard.writeText(texto);
-    alert("Texto de la nota vieja copiado con éxito.");
-  }
-
-  function renderizarHistorialNotas() {
-    const contenedor = document.getElementById("lista-historial-notas");
-    const notas = obtenerNotasHistorialCompleto();
-    contenedor.innerHTML = "";
-
-    if (notas.length === 0) {
-      contenedor.innerHTML = `<p style="color: var(--texto-mutado); font-size:13px; margin:0;">Aún no guardaste ninguna nota en el historial permanente.</p>`;
-      return;
-    }
-
-    notas.forEach(n => {
-      const div = document.createElement("div");
-      div.className = "nota-archivada-item";
-      div.innerHTML = `
-        <div class="nota-archivada-header">
-          <div>
-            <div class="nota-meta">📅 ${n.fecha}</div>
-            <div class="nota-meta" style="font-style: italic; opacity:0.8;">📖 ${n.pasaje}</div>
-          </div>
-          <div class="nota-archivada-acciones">
-            <button class="btn-pildora btn-pildora-copy" onclick="copiarNotaDelHistorial(\`${n.contenido.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">📋 Copiar</button>
-            <button class="btn-pildora btn-pildora-del" onclick="eliminarNotaDelHistorial(${n.id})">✕</button>
-          </div>
-        </div>
-        <div class="nota-archivada-texto">${n.contenido}</div>
-      `;
-      contenedor.appendChild(div);
-    });
-  }
-
-  // --- CUADERNO DE ORACIÓN ---
-  function obtenerPeticiones() {
-    return JSON.parse(localStorage.getItem("lista_peticiones_oracion") || "[]");
-  }
-
-  function guardarPeticiones(lista) {
-    localStorage.setItem("lista_peticiones_oracion", JSON.stringify(lista));
-  }
-
-  function agregarPeticion() {
-    const input = document.getElementById("input-oracion");
-    const texto = input.value.trim();
-    if (!texto) return;
-
-    let peticiones = obtenerPeticiones();
-    peticiones.push({ id: Date.now(), texto: texto, respondida: false });
-    guardarPeticiones(peticiones);
-    
-    input.value = "";
-    renderizarPeticiones();
-  }
-
-  function alternarEstadoPeticion(id) {
-    let peticiones = obtenerPeticiones();
-    peticiones = peticiones.map(p => p.id === id ? { ...p, respondida: !p.respondida } : p);
-    guardarPeticiones(peticiones);
-    renderizarPeticiones();
-  }
-
-  function eliminarPeticion(id) {
-    let peticiones = obtenerPeticiones();
-    peticiones = peticiones.filter(p => p.id !== id);
-    guardarPeticiones(peticiones);
-    renderizarPeticiones();
-  }
-
-  function renderizarPeticiones() {
-    const contenedor = document.getElementById("lista-peticiones");
-    const peticiones = obtenerPeticiones();
-    contenedor.innerHTML = "";
-
-    if (peticiones.length === 0) {
-      contenedor.innerHTML = `<p style="color: var(--texto-mutado); font-size:13px; margin:0;">No tienes peticiones guardadas aún.</p>`;
-      return;
-    }
-
-    peticiones.forEach(p => {
-      const div = document.createElement("div");
-      div.className = `oracion-item ${p.respondida ? 'respondida' : ''}`;
-      div.innerHTML = `
-        <span class="oracion-item-texto">${p.texto}</span>
-        <div class="oracion-acciones">
-          <button class="btn-pildora btn-pildora-check" onclick="alternarEstadoPeticion(${p.id})">
-            ${p.respondida ? '↩ Orando' : '✓ Respondida'}
-          </button>
-          <button class="btn-pildora btn-pildora-del" onclick="eliminarPeticion(${p.id})">✕</button>
-        </div>
-      `;
-      contenedor.appendChild(div);
-    });
-  }
-
-  function establecerMusicaDinámica(textoClave) {
-    let index = Math.abs(textoClave.length % cancionesAdoracion.length);
-    cancionSeleccionada = cancionesAdoracion[index];
-    document.getElementById("musica-titulo").innerText = `🎵 Sugerencia: ${cancionSeleccionada.titulo}`;
-    document.getElementById("musica-sub").innerText = `Por: ${cancionSeleccionada.artista}`;
-  }
-
-  function abrirMusica() {
-    const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(cancionSeleccionada.query)}`;
-    window.open(url, '_blank');
-  }
-
-  function buscarEnBiblia() {
-    const pasaje = document.getElementById("input-pasaje-biblia").value.trim();
-    if (!pasaje) { alert("Por favor, ingresa un pasaje bíblico."); return; }
-    const container = document.getElementById("frame-biblia-container");
-    const iframe = document.getElementById("iframe-biblia");
-    iframe.src = "about:blank";
-    const urlBiblia = `https://www.biblegateway.com/passage/?search=${encodeURIComponent(pasaje)}&version=RVR1960&interface=print`;
-    container.style.display = "block";
-    setTimeout(() => { iframe.src = urlBiblia; }, 50);
-  }
-
+  // --- OBTENER DEVOCIONAL DEL SERVIDOR ---
   async function generarDevocionalAutomatico() {
     const contenedor = document.getElementById("contenedor-devocional");
     try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        mode: "cors",
-        headers: { "Content-Type": "text/plain" },
+      const urlEvitarCache = API_URL + "?nocache=" + new Date().getTime();
+      const res = await fetch(urlEvitarCache, {
+        method: "POST", mode: "cors", headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ tipo: "devocional" })
       });
       const data = await res.json();
       if(data.error) { contenedor.innerHTML = `<p style="color:#ef4444;">⚠️ Error: ${data.error}</p>`; return; }
 
       devocionalActual = data;
-      establecerMusicaDinámica(data.versiculo || "adoracion");
 
       contenedor.innerHTML = `
-        <div class="bloque-devocional versiculo-destacado">
-          <h3>📖 Escritura Clave</h3>
-          <p>${data.versiculo}</p>
+        <div class="audio-control-box">
+          <button id="btn-reproductor-voz" class="btn-audio" onclick="alternarAudioDevocional()">🔊 Escuchar Devocional</button>
         </div>
-        <div class="bloque-devocional">
-          <h3>📝 Reflexión del Día</h3>
-          <p>${data.reflexion}</p>
-        </div>
-        <div class="bloque-devocional">
-          <h3>💡 Aplicación Práctica</h3>
-          <p>${data.aplicacion}</p>
-        </div>
-        <div class="bloque-devocional">
-          <h3>🙏 Oración Altar</h3>
-          <p>${data.oracion}</p>
-        </div>
-        <div class="bloque-devocional" style="border-left-color: #a78bfa;">
-          <h3>🤔 Meditación Introspectiva</h3>
-          <p>${data.pregunta || 'Medita en la gracia divina hoy.'}</p>
-        </div>
-        <div class="bloque-devocional" style="border-left-color: #f43f5e;">
-          <h3>🎯 Desafío de Amor y Gratitud</h3>
-          <p>${data.desafio || 'Camina hoy recordando que eres aceptado.'}</p>
-        </div>
-        <div class="bloque-devocional" style="border-left-color: #10b981;">
-          <h3>📚 Lectura Recomendada para hoy</h3>
-          <p>${data.lectura || 'Consulta el plan semanal abajo.'}</p>
-        </div>
+        <div class="bloque-devocional versiculo-destacado"><h3>📖 Escritura Clave</h3><p>${data.versiculo}</p></div>
+        <div class="bloque-devocional"><h3>📝 Reflexión del Día</h3><p>${data.reflexion}</p></div>
+        <div class="bloque-devocional"><h3>💡 Aplicación Práctica</h3><p>${data.aplicacion}</p></div>
+        <div class="bloque-devocional"><h3>🙏 Oración Altar</h3><p>${data.oracion}</p></div>
         <div class="compartir-container">
           <button class="btn-share btn-wp" onclick="compartir('wa')">📲 WhatsApp</button>
           <button class="btn-share btn-fb" onclick="compartir('fb')">🔵 Facebook</button>
-          <button class="btn-share btn-tw" onclick="compartir('tw')">⚫ Compartir en X</button>
         </div>
       `;
-
-      if(data.plan_semanal) configurarPlanDinamico(data.plan_semanal, data.fecha);
-    } catch (error) {
-      contenedor.innerHTML = `<p style="color:#ef4444;">❌ No se pudo cargar el devocional automático.</p>`;
-    }
+      if(data.plan_semanal) configurarPlanDinamico(data.plan_semanal);
+    } catch (error) { contenedor.innerHTML = `<p style="color:#ef4444;">❌ No se pudo conectar con el servidor.</p>`; }
   }
 
   function compartir(plataforma) {
     if (!devocionalActual) return;
     const urlPagina = window.location.href;
-    const textoCompartir = `🙏 *Devocional Diario* 📖\n\n"${devocionalActual.versiculo}"\n\nURL: ${urlPagina}`;
+    const textoCompartir = `🙏 *Devocional Diario* 📖\n\n"${devocionalActual.versiculo}"`;
     let urlShare = "";
     if (plataforma === 'wa') urlShare = `https://api.whatsapp.com/send?text=${encodeURIComponent(textoCompartir)}`;
     if (plataforma === 'fb') urlShare = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlPagina)}`;
-    if (plataforma === 'tw') urlShare = `https://twitter.com/intent/tweet?text=${encodeURIComponent("Devocional bíblico.")}&url=${encodeURIComponent(urlPagina)}`;
     window.open(urlShare, '_blank');
   }
 
-  function configurarPlanDinamico(plan, fechaDevocional) {
+  function configurarPlanDinamico(plan) {
     const grid = document.getElementById("grid-plan");
     grid.innerHTML = "";
-    const partesFecha = fechaDevocional.split("/");
-    const d = new Date(partesFecha[2], partesFecha[1] - 1, partesFecha[0]);
-    const diaSemana = d.getDay();
-    const diferencia = d.getDate() - diaSemana + (diaSemana === 0 ? -6 : 1);
-    const lunesSemana = new Date(d.setDate(diferencia));
-    const lunesFormateadoStr = lunesSemana.toLocaleDateString("es-AR");
-
-    const ultimaSemanaRegistrada = localStorage.getItem("ultima_semana_leida");
-    if (ultimaSemanaRegistrada !== lunesFormateadoStr) {
-      localStorage.setItem("ultima_semana_leida", lunesFormateadoStr);
-      for (let i = 0; i < 7; i++) localStorage.removeItem(`dinamico_plan_${i}`);
-    }
-
-    plan.forEach((item, index) => {
-      const estado = localStorage.getItem(`dinamico_plan_${index}`) === "completado";
-      const fechaDia = new Date(lunesSemana);
-      fechaDia.setDate(lunesSemana.getDate() + index);
-      const diaMesFormateado = `${String(fechaDia.getDate()).padStart(2, '0')}/${String(fechaDia.getMonth() + 1).padStart(2, '0')}`;
-
+    plan.forEach((item) => {
       const div = document.createElement("div");
-      div.className = `plan-dia ${estado ? 'completado' : ''}`;
-      div.onclick = () => {
-        if (div.classList.contains("completado")) {
-          div.classList.remove("completado");
-          localStorage.removeItem(`dinamico_plan_${index}`);
-        } else {
-          div.classList.add("completado");
-          localStorage.setItem(`dinamico_plan_${index}`, "completado");
-        }
-      };
-      div.innerHTML = `<h4>${item.dia} ${diaMesFormateado}</h4><p>${item.pasaje}</p><div class="check-icono">✓ Leído</div>`;
+      div.className = "plan-dia";
+      div.innerHTML = `<h4>${item.dia}</h4><p>${item.pasaje}</p>`;
       grid.appendChild(div);
     });
   }
@@ -997,32 +586,25 @@
     const texto = document.getElementById("consulta").value.trim();
     const btn = document.getElementById("btnPalabra");
     const contenedor = document.getElementById("contenedor-respuesta");
-    if (!texto) { alert("Por favor, escribe lo que sientes."); return; }
+    if (!texto) return;
     btn.disabled = true;
     contenedor.style.display = "block";
-    contenedor.innerHTML = `<div class="loading-container"><div class="spinner"></div><p>Buscando en la Palabra...</p></div>`;
+    contenedor.innerHTML = `<div class="loading-container"><div class="spinner"></div><p>Buscando consejo en la Gracia...</p></div>`;
 
     try {
       const res = await fetch(API_URL, {
-        method: "POST",
-        mode: "cors",
-        headers: { "Content-Type": "text/plain" },
+        method: "POST", mode: "cors", headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ tipo: "palabra", mensaje: texto })
       });
       const data = await res.json();
-      if(data.error) { contenedor.innerHTML = `<p style="color:#ef4444;">⚠️ Error: ${data.error}</p>`; return; }
-
       contenedor.innerHTML = `
         <div style="border-top: 1px solid var(--borde); padding-top: 20px;">
-          <div class="bloque-devocional versiculo-destacado"><h3>📖 Promesa Bíblica</h3><p>${data.versiculo}</p></div>
-          <div class="bloque-devocional"><h3>Pastoral y Aliento</h3><p>${data.reflexion}</p></div>
-          <div class="bloque-devocional"><h3>🎯 Consejo Práctico</h3><p>${data.consejo}</p></div>
-          <div class="bloque-devocional"><h3>🙏 Oración contigo</h3><p>${data.oracion}</p></div>
+          <div class="bloque-devocional versiculo-destacado"><h3>📖 Promesa</h3><p>${data.versiculo}</p></div>
+          <div class="bloque-devocional"><h3>📋 Consejo Pastoral</h3><p>${data.reflexion}</p></div>
         </div>
       `;
-    } catch (error) {
-      contenedor.innerHTML = `<p style="color:#ef4444;">❌ Error al procesar.</p>`;
-    } finally { btn.disabled = false; }
+    } catch (error) { contenedor.innerHTML = `<p style="color:#ef4444;">❌ Inténtalo de nuevo.</p>`; }
+    finally { btn.disabled = false; }
   }
 </script>
 </body>
