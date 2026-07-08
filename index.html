@@ -224,10 +224,9 @@
       box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
     }
 
+    /* ESTILOS DEL BOTÓN DE AUDIO */
     .audio-control-box {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
 
     .btn-audio {
@@ -235,12 +234,16 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 10px 16px;
-      font-size: 14px;
+      padding: 12px;
+      font-size: 15px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+      margin-top: 0;
     }
 
     .btn-audio.reproduciendo {
       background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
     }
 
     .compartir-container {
@@ -289,7 +292,7 @@
     }
 
     .plan-dia h4 { margin: 0 0 4px 0; font-size: 14px; color: var(--texto-claro); }
-    .plan-dia p { margin: 0; font-size: 12px; color: var(--texto-mutated || var(--texto-mutado)); }
+    .plan-dia p { margin: 0; font-size: 12px; color: var(--texto-mutado); }
 
     .resultado-diccionario {
       margin-top: 15px;
@@ -348,7 +351,8 @@
 
 <div class="container">
 
-  <div class="seccion-titulo">✨ Devocional Guided de Hoy</div>
+  <!-- DEVOCIONAL AUTOMÁTICO -->
+  <div class="seccion-titulo">✨ Devocional de Hoy</div>
   <div class="card-principal" id="contenedor-devocional">
     <div class="loading-container">
       <div class="spinner"></div>
@@ -356,6 +360,7 @@
     </div>
   </div>
 
+  <!-- DICCIONARIO TEOLÓGICO REFORMADO -->
   <div class="seccion-titulo">📚 Diccionario Teológico Reformado</div>
   <div class="card-principal">
     <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">¿Encontraste un término profundo en la reflexión? Buscalo acá al instante.</p>
@@ -366,6 +371,7 @@
     <div id="area-resultado-diccionario" style="display: none;"></div>
   </div>
 
+  <!-- DEVOCIONAL PERSONALIZADO -->
   <div class="seccion-titulo">💬 Devocional Bíblico Personalizado</div>
   <div class="card-principal">
     <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">¿Estás pasando por algo específico? Contame cómo te sentís para recibir dirección bíblica bajo la gracia.</p>
@@ -375,6 +381,7 @@
     <div id="contenedor-respuesta" style="margin-top: 25px; display: none;"></div>
   </div>
 
+  <!-- PLAN SEMANAL -->
   <div class="seccion-titulo">📅 Plan de Estudio Bíblico (Semanal Fijo)</div>
   <div class="card-principal">
     <p style="margin-top:0; font-size: 14px; color: var(--texto-mutado);">Cronograma de lectura sistemática e inamovible para esta semana.</p>
@@ -386,7 +393,7 @@
 </div>
 
 <script>
-  // REEMPLAZÁ ESTA URL CON TU NUEVA IMPLEMENTACIÓN DE GOOGLE APPS SCRIPT SI ES NECESARIO
+  // REEMPLAZÁ ESTA URL CON LA TUVA DE GOOGLE APPS SCRIPT
   const API_URL = "https://script.google.com/macros/s/AKfycbw6H3Z0Hh35Uv7v1oI1pL1bH1N1p-Y1M1P1v1N1/exec"; 
   let devocionalActual = null;
 
@@ -396,7 +403,7 @@
     "monergismo": "Creencia de que solo Dios actúa para efectuar la salvación del pecador, sin la cooperación del libre albedrío humano. El Espíritu Santo regenera el corazón muerto espiritualmente para que este pueda creer de forma voluntaria.",
     "sinergismo": "Postura teológica contraria al monergismo; sostiene que la salvación se logra mediante la cooperación entre la gracia de Dios y el libre albedrío del ser humano. Rechazada por la teología reformada.",
     "providencia": "El cuidado soberano, continuo y fiel por el cual Dios sostiene, guía y gobierna todas las cosas creadas, desde la estrella más grande hasta el detalle más pequeño de nuestras vidas, para el cumplimiento de sus santos propósitos.",
-    "gracia irresistible": "El cuarto punto de las Doctrinas de la Gracia. Afirma que cuando el Espíritu Santo llama eficazmente a un elegido a la salvación, este no puede resistirse de manera definitiva; la gracia transforma el corazón de piedra en uno de carne, haciendo que responda con fe y amor.",
+    "gracia irresistible": "El cuarto punto de las Doctrinas de la Gracia. Enseña que cuando el Espíritu Santo llama eficazmente a un elegido, este no puede resistirse de manera definitiva; la gracia transforma el corazón de piedra en uno de carne, haciendo que responda con fe y amor.",
     "justificacion": "Acto legal y judicial de Dios por el cual declara justo al pecador, no porque este sea inherentemente santo, sino porque le imputa (le acredita) la justicia perfecta y el sacrificio de Cristo en la cruz, recibido únicamente mediante la fe.",
     "eleccion": "El acto soberano y eterno de Dios, previo a la fundación del mundo, por el cual escogió de manera incondicional a ciertos individuos para ser redimidos en Cristo, motivado puramente por su beneplácito y amor, y no por prever algún mérito en ellos.",
     "depravacion total": "Primer punto de las Doctrinas de la Gracia. Establece que a causa de la caída, el ser humano está completamente afectado por el pecado en todas sus facultades (mente, voluntad y emociones), estando espiritualmente muerto e incapacitado para buscar o elegir a Dios por sus propias fuerzas.",
@@ -447,19 +454,16 @@
     document.getElementById("badge-racha").innerText = `🔥 ${racha} ${racha === 1 ? 'Día' : 'Días'}`;
   }
 
-  // --- MOTOR DEL DICCIONARIO TEOLÓGICO ---
+  // --- BUSCADOR DEL DICCIONARIO ---
   function buscarEnDiccionario() {
     const terminoInput = document.getElementById("input-glosario").value.trim().toLowerCase();
     const cajaResultado = document.getElementById("area-resultado-diccionario");
 
     if (!terminoInput) return;
 
-    // Quitamos acentos para facilitar la búsqueda
     const terminoLimpio = terminoInput.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    
     let definicion = DICCIONARIO_REFORMADO[terminoLimpio];
 
-    // Si no lo encuentra directo, busca coincidencias parciales
     if (!definicion) {
       const llaves = Object.keys(DICCIONARIO_REFORMADO);
       const coincidencia = llaves.find(k => k.includes(terminoLimpio) || terminoLimpio.includes(k));
@@ -479,36 +483,33 @@
       cajaResultado.innerHTML = `
         <div class="resultado-diccionario" style="border-left-color: #ef4444;">
           <h4 style="color: #ef4444;">🔍 Término no encontrado</h4>
-          <p>No encontramos ese concepto teológico exacto en la base de datos de las Doctrinas de la Gracia. Intentá con palabras clave como <i>Monergismo, Gracia, Justificación o Soteriología</i>.</p>
+          <p>No encontramos ese concepto exacto. Probá con palabras como <i>Monergismo, Soteriología, Justificación o Providencia</i>.</p>
         </div>
       `;
     }
   }
 
-  // --- MOTOR DE AUDIO (TEXTO A VOZ NATIVO) ---
+  // --- SINTETIZADOR DE AUDIO (TEXTO A VOZ NATIVO) ---
   function alternarAudioDevocional() {
     const botonAudio = document.getElementById("btn-reproductor-voz");
-    
     if (!devocionalActual) return;
 
     if (estaReproduciendoAudio) {
-      // Si ya está hablando, lo pausamos por completo
       window.speechSynthesis.cancel();
       estaReproduciendoAudio = false;
       botonAudio.classList.remove("reproduciendo");
       botonAudio.innerText = "🔊 Escuchar Devocional";
     } else {
-      // Preparamos todo el texto completo ordenadamente
       const textoParaLeer = `
         Pasaje clave de hoy. ${devocionalActual.versiculo}. 
         Reflexión teológica. ${devocionalActual.reflexion}. 
-        Aplicación práctica para tu día. ${devocionalActual.aplicacion}.
-        Oración para terminar. ${devocionalActual.oracion}.
+        Aplicación práctica. ${devocionalActual.aplicacion}.
+        Oración para finalizar. ${devocionalActual.oracion}.
       `;
 
       emisorVoz = new SpeechSynthesisUtterance(textoParaLeer);
-      emisorVoz.lang = 'es-AR'; // Forzamos acento en español neutro / latinoamericano
-      emisorVoz.rate = 0.95;    // Velocidad pausada e introspectiva pastoral
+      emisorVoz.lang = 'es-AR'; 
+      emisorVoz.rate = 0.95; 
 
       emisorVoz.onend = () => {
         estaReproduciendoAudio = false;
@@ -530,7 +531,7 @@
     }
   }
 
-  // --- OBTENER DEVOCIONAL DEL SERVIDOR ---
+  // --- CARGA DEL DEVOCIONAL ---
   async function generarDevocionalAutomatico() {
     const contenedor = document.getElementById("contenedor-devocional");
     try {
@@ -544,6 +545,7 @@
 
       devocionalActual = data;
 
+      // ACÁ QUEDÓ INYECTADO CORRECTAMENTE EL BOTÓN DE AUDIO Y LOS BLOQUES
       contenedor.innerHTML = `
         <div class="audio-control-box">
           <button id="btn-reproductor-voz" class="btn-audio" onclick="alternarAudioDevocional()">🔊 Escuchar Devocional</button>
@@ -561,16 +563,6 @@
     } catch (error) { contenedor.innerHTML = `<p style="color:#ef4444;">❌ No se pudo conectar con el servidor.</p>`; }
   }
 
-  function compartir(plataforma) {
-    if (!devocionalActual) return;
-    const urlPagina = window.location.href;
-    const textoCompartir = `🙏 *Devocional Diario* 📖\n\n"${devocionalActual.versiculo}"`;
-    let urlShare = "";
-    if (plataforma === 'wa') urlShare = `https://api.whatsapp.com/send?text=${encodeURIComponent(textoCompartir)}`;
-    if (plataforma === 'fb') urlShare = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlPagina)}`;
-    window.open(urlShare, '_blank');
-  }
-
   function configurarPlanDinamico(plan) {
     const grid = document.getElementById("grid-plan");
     grid.innerHTML = "";
@@ -580,6 +572,16 @@
       div.innerHTML = `<h4>${item.dia}</h4><p>${item.pasaje}</p>`;
       grid.appendChild(div);
     });
+  }
+
+  function compartir(plataforma) {
+    if (!devocionalActual) return;
+    const urlPagina = window.location.href;
+    const textoCompartir = `🙏 *Devocional Diario* 📖\n\n"${devocionalActual.versiculo}"`;
+    let urlShare = "";
+    if (plataforma === 'wa') urlShare = `https://api.whatsapp.com/send?text=${encodeURIComponent(textoCompartir)}`;
+    if (plataforma === 'fb') urlShare = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlPagina)}`;
+    window.open(urlShare, '_blank');
   }
 
   async function palabraPersonalizada() {
