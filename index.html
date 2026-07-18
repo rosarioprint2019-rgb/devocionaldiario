@@ -767,7 +767,7 @@
     }, 30000);
   }
 
-  // --- INTEGRACIÓN: DICCIONARIO BÍBLICO EXPOSITIVO CON IA ---
+  // --- INTEGRACIÓN COMPLETA: DICCIONARIO BÍBLICO EXPOSITIVO CON IA ---
   async function buscarEnDiccionarioIA() {
     const palabra = document.getElementById("input-glosario").value.trim();
     const btn = document.getElementById("btn-buscar-diccionario");
@@ -787,8 +787,6 @@
     try {
       const res = await fetch(API_URL, {
         method: "POST",
-        mode: "cors",
-        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ tipo: "diccionario", palabra: palabra })
       });
       const data = await res.json();
@@ -806,7 +804,7 @@
       cajaResultado.innerHTML = `
         <div class="resultado-diccionario">
           <h4>📖 ${data.termino || palabra}</h4>
-          <p><strong>🌱 Raíz e Etimología:</strong> ${data.etimologia || 'No especificada.'}</p>
+          <p><strong>🌱 Raíz y Etimología:</strong> ${data.etimologia || 'No especificada.'}</p>
           <p><strong>🏛️ Contexto Histórico:</strong> ${data.contexto || 'No especificado.'}</p>
           <p><strong>💡 Relevancia Práctica:</strong> ${data.aplicacion || 'No especificada.'}</p>
         </div>
@@ -1002,8 +1000,6 @@
     try {
       const res = await fetch(API_URL, {
         method: "POST",
-        mode: "cors",
-        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ tipo: "devocional" })
       });
       const data = await res.json();
@@ -1079,8 +1075,6 @@
     try {
       const res = await fetch(API_URL, {
         method: "POST",
-        mode: "cors",
-        headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({ tipo: "palabra", mensaje: texto })
       });
       const data = await res.json();
